@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TqSdk期货程序化交易入门：我的第一个自动策略是怎么跑起来的</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<h1>TqSdk期货程序化交易入门：我的第一个自动策略是怎么跑起来的</h1>
+<p>记得刚开始学程序化交易的时候，网上的教程要么太学术，要么太简单。大部分教程停留在"用Python获取K线数据"这个阶段，但没告诉你怎么把它变成一个真的、能自动下单的系统。</p>
+<p>这篇文章讲的就是这个。</p>
+<hr>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<h2>为什么选TqSdk</h2>
+<p>国内期货程序化有几个选择：TB（Trade Blotter）、文华财经、TqSdk（天勤）。</p>
+<p>TB和文华都是图形化为主，策略语言相对封闭。TqSdk是Python原生的，开源，可以直接用pandas、statsmodels这些熟悉的库。对我来说，选择很明确。</p>
+<p>TqSdk另一个好处是：<strong>模拟账户和实盘账户的代码几乎一样</strong>，只是TqAccount对象传的参数不同。这让调试非常方便——先在模拟盘跑，确认逻辑没问题再切实盘。</p>
+<hr>
+<h2>最小可运行结构</h2>
+<p>一个TqSdk策略的骨架长这样：</p>
+<pre><code class="language-python">
+from tqsdk import TqApi, TqAuth, TqAccount
+
+api = TqApi(
+    account=TqAccount("期货公司名", "账户", "密码"),
+    auth=TqAuth("天勤账号", "天勤密码")
+)
+
+# 订阅数据
+klines = api.get_kline_serial("KQ.m@SHFE.rb", 60)  # 螺纹钢主力，1分钟K线
+quote = api.get_quote("KQ.m@SHFE.rb")
+
+# 主循环
+while True:
+    api.wait_update()
+    if api.is_changing(klines.iloc[-1], "datetime"):
+        # 新K线出现时执行策略逻辑
+        close_price = klines["close"].iloc[-1]
+        print(f"最新收盘价: {close_price}")
+</code></pre>
+<p><code>api.wait_update()</code> 是核心——它会阻塞程序，直到有任何数据更新（行情、账户、K线等），然后返回。这个机制非常高效，不会占用CPU轮询。</p>
+<hr>
+<h2>主力合约格式：这个坑我见过太多人踩</h2>
+<p>很多初学者会写成 <code>"SHFE.rb2501"</code> 这种格式——这是固定合约。但期货有换月问题，下月合约流动性会突然变差，你的策略可能拿着一个流动性很差的合约进出场。</p>
+<p>用主力合约格式：<code>"KQ.m@SHFE.rb"</code></p>
+<p><code>KQ.m@</code> 是天勤的主力合约前缀，会自动指向当前主力合约。换月时系统会自动切换，不需要你手动改代码。</p>
+<p>这一个细节，省了我很多麻烦。</p>
+<hr>
+<h2>下单：用目标持仓，不要用直接下单</h2>
+<p>TqSdk提供两种下单方式：</p>
+<p><strong>方式一：直接下单</strong></p>
+<pre><code class="language-python">
+api.insert_order("KQ.m@SHFE.rb", "BUY", "OPEN", 1)
+</code></pre>
+<p><strong>方式二：目标持仓（推荐）</strong></p>
+<pre><code class="language-python">
+pos_task = api.get_position_task("KQ.m@SHFE.rb")
+pos_task.set_target_volume(1)  # 目标持仓1手多
+</code></pre>
+<p>我强烈推荐用目标持仓。原因是：目标持仓会帮你处理部分成交、拒单、撤单重下等细节。你只需要告诉系统"我要持有多少手"，剩下的它来搞定。</p>
+<p>直接下单需要自己处理这些边界情况，代码复杂度高10倍不止。</p>
+<hr>
+<h2>第一个完整策略：双均线</h2>
+<p>把上面的骨架加上策略逻辑：</p>
+<pre><code class="language-python">
+from tqsdk import TqApi, TqAuth, TqAccount
+import numpy as np
+
+api = TqApi(
+    account=TqAccount("南华期货", "账号", "密码"),
+    auth=TqAuth("你的天勤账号", "密码")
+)
+
+symbol = "KQ.m@SHFE.rb"
+klines = api.get_kline_serial(symbol, 3600)  # 1小时K线
+pos_task = api.get_position_task(symbol)
+
+while True:
+    api.wait_update()
+    if not api.is_changing(klines.iloc[-1], "datetime"):
+        continue  # 只在新K线形成时处理
+    
+    close = klines["close"]
+    ma5 = close.iloc[-6:-1].mean()    # 5日均线
+    ma20 = close.iloc[-21:-1].mean()  # 20日均线
+    
+    if ma5 &gt; ma20:
+        pos_task.set_target_volume(1)   # 金叉，持多1手
+    elif ma5 &lt; ma20:
+        pos_task.set_target_volume(-1)  # 死叉，持空1手
+</code></pre>
+<p>这就是一个完整的双均线策略，大概40行代码。逻辑清晰，没有废话。</p>
+<hr>
+<h2>模拟回测 vs 真实回测</h2>
+<p>TqSdk有内置的回测模块TqBacktest，可以在本地回放历史行情：</p>
+<pre><code class="language-python">
+from tqsdk import TqBacktest
+from datetime import date
+
+api = TqApi(
+    backtest=TqBacktest(
+        start_dt=date(2023, 1, 1),
+        end_dt=date(2024, 1, 1)
+    ),
+    auth=TqAuth("账号", "密码")
+)
+</code></pre>
+<p>但我要说一个真实情况：TqBacktest需要网络连接下载历史数据，速度和稳定性有时候不太好。遇到超时就用本地缓存，或者用akshare先下载好数据做离线回测。</p>
+<hr>
+<h2>部署上线之前要做的事</h2>
+<p>策略逻辑调通后，部署到生产环境前，我的检查清单：</p>
+<p>1. <strong>检查主力合约格式</strong>：用 <code>KQ.m@SHFE.rb</code> 不要用固定月份</p>
+<p>2. <strong>检查下单方向</strong>：在代码里加 <code>print(f"当前持仓目标: {target}")</code> 确认方向</p>
+<p>3. <strong>检查风控条件</strong>：最大持仓上限、交易时间判断（避免夜盘结束前乱下单）</p>
+<p>4. <strong>钉钉推送</strong>：下单/平仓时推送通知，人不在电脑前也能第一时间知道</p>
+<p>第4点尤其重要。我的系统每次开仓都会推钉钉，包含：品种、方向、价格、仓位。有一次通知和实际方向不符，正是这个通知让我及时发现了代码bug。</p>
+<hr>
+<h2>总结</h2>
+<p>程序化交易的门槛，说高不高，说低不低。TqSdk把下单、持仓管理这些基础设施都封装好了，你的主要工作是：</p>
+<p>1. 搞清楚策略逻辑</p>
+<p>2. 写好风控</p>
+<p>3. 跑通模拟</p>
+<p>4. 监控实盘</p>
+<p>代码本身不难，难的是策略本身，还有实盘中的心态。</p>
+<hr>
+<p><em>作者：虾仔 | 黑色系期货量化实践 | 有问题欢迎公众号后台留言</em></p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
