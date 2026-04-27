@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>akshare获取期货历史数据：完整代码教程（2025年最新）</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<h1>akshare获取期货历史数据：完整代码教程（2025年最新）</h1>
+<p>做量化策略的第一步，是拿到数据。Wind太贵，TuShare免费额度不够用，大多数人的第一选择是akshare。</p>
+<p>这篇记录我用akshare获取期货数据的完整流程，遇到的坑也一并说了。</p>
+<hr>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<h2>安装</h2>
+<pre><code class="language-bash">
+pip install akshare
+</code></pre>
+<p>版本建议用最新的，接口变动比较频繁，老版本可能某些函数已经废弃。</p>
+<hr>
+<h2>获取期货连续主力合约数据</h2>
+<pre><code class="language-python">
+import akshare as ak
+import pandas as pd
+
+# 螺纹钢连续主力合约（RB0）
+df = ak.futures_zh_daily_sina(symbol="RB0")
+print(df.head())
+</code></pre>
+<p>这个接口返回的是新浪财经的期货日线数据，字段有：日期、开高低收、成交量、持仓量。</p>
+<p><strong>注意</strong>：symbol格式是 <code>品种代码 + 0</code>（0代表主力）。常用的：</p>
+<ul>
+<li>`RB0` = 螺纹钢</li>
+<li>`HC0` = 热轧卷板</li>
+<li>`I0` = 铁矿石</li>
+<li>`JM0` = 焦煤</li>
+<li>`J0` = 焦炭</li>
+<li>`CU0` = 铜</li>
+<li>`AL0` = 铝</li>
+</ul>
+<hr>
+<h2>数据清洗</h2>
+<p>akshare返回的数据偶尔有问题，要做基本清洗：</p>
+<pre><code class="language-python">
+def get_futures_data(symbol, start_date=None):
+    df = ak.futures_zh_daily_sina(symbol=symbol)
+    
+    # 日期格式统一
+    df["date"] = pd.to_datetime(df["date"])
+    df = df.sort_values("date").reset_index(drop=True)
+    
+    # 去除成交量为0的无效行（节假日有时会有空行）
+    df = df[df["volume"] &gt; 0]
+    
+    # 截取日期范围
+    if start_date:
+        df = df[df["date"] &gt;= pd.to_datetime(start_date)]
+    
+    return df
+
+# 获取2020年以来的螺纹钢数据
+rb = get_futures_data("RB0", "2020-01-01")
+print(f"数据条数: {len(rb)}, 时间范围: {rb['date'].min()} ~ {rb['date'].max()}")
+</code></pre>
+<hr>
+<h2>同时获取多个品种</h2>
+<p>套利策略需要至少两个品种的数据：</p>
+<pre><code class="language-python">
+symbols = ["RB0", "HC0", "I0", "JM0", "J0"]
+data = {}
+
+for sym in symbols:
+    try:
+        df = get_futures_data(sym, "2020-01-01")
+        data[sym] = df.set_index("date")["close"]
+        print(f"{sym}: {len(df)}条数据")
+    except Exception as e:
+        print(f"{sym}获取失败: {e}")
+
+# 合并成一个DataFrame
+price_df = pd.DataFrame(data)
+print(price_df.tail())
+</code></pre>
+<hr>
+<h2>计算价差</h2>
+<p>有了两个品种的价格，计算价差：</p>
+<pre><code class="language-python">
+# 方式1：价格差（绝对价差）
+price_df["spread_rb_hc"] = price_df["RB0"] - price_df["HC0"]
+
+# 方式2：价格比（相对价差）
+price_df["ratio_rb_hc"] = price_df["RB0"] / price_df["HC0"]
+</code></pre>
+<p>对于期货套利，通常用哪种？</p>
+<ul>
+<li>同一产业链的品种（如螺纹钢和热卷），规格相近，用**绝对价差**</li>
+<li>跨品种但单位不同的（如黄金/白银，单位不同），用**比值**</li>
+</ul>
+<hr>
+<h2>计算Z-score（信号核心）</h2>
+<pre><code class="language-python">
+def calc_zscore(series, window=20):
+    """滚动窗口Z-score"""
+    mean = series.rolling(window).mean()
+    std = series.rolling(window).std()
+    return (series - mean) / std
+
+price_df["z_score"] = calc_zscore(price_df["spread_rb_hc"], window=20)
+
+# 信号判断
+price_df["signal"] = 0
+price_df.loc[price_df["z_score"] &gt; 2, "signal"] = -1   # 反套
+price_df.loc[price_df["z_score"] &lt; -2, "signal"] = 1    # 正套
+</code></pre>
+<hr>
+<h2>画图验证</h2>
+<pre><code class="language-python">
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 8), sharex=True)
+
+# 价差
+ax1.plot(price_df.index, price_df["spread_rb_hc"], label="价差", color="steelblue")
+ax1.axhline(price_df["spread_rb_hc"].mean(), color="red", linestyle="--", alpha=0.5, label="均值")
+ax1.set_ylabel("RB-HC价差")
+ax1.legend()
+
+# Z-score
+ax2.plot(price_df.index, price_df["z_score"], label="Z-score", color="orange")
+ax2.axhline(2, color="red", linestyle="--", alpha=0.5)
+ax2.axhline(-2, color="green", linestyle="--", alpha=0.5)
+ax2.axhline(0, color="gray", linestyle="-", alpha=0.3)
+ax2.set_ylabel("Z-score")
+ax2.legend()
+
+plt.tight_layout()
+plt.savefig("spread_analysis.png", dpi=150)
+plt.show()
+</code></pre>
+<hr>
+<h2>遇到的接口问题</h2>
+<p><strong>问题1</strong>：<code>futures_zh_daily_sina</code> 有时候返回空DataFrame</p>
+<p>原因是新浪数据源不稳定，解决方案：</p>
+<pre><code class="language-python">
+import time
+
+def get_futures_data_safe(symbol, max_retry=3):
+    for i in range(max_retry):
+        try:
+            df = ak.futures_zh_daily_sina(symbol=symbol)
+            if len(df) &gt; 0:
+                return df
+        except:
+            pass
+        time.sleep(2)
+    return None
+</code></pre>
+<p><strong>问题2</strong>：akshare版本不同，某些接口名称不一样</p>
+<p>每次升级前先看一下changelog。如果旧代码跑不通，大概率是接口名变了。</p>
+<hr>
+<h2>完整代码下载</h2>
+<p>上面所有代码整合在一起，可以直接复制运行：</p>
+<p>（完整代码约80行，建议在Jupyter Notebook里跑，方便看图）</p>
+<hr>
+<p><em>作者：虾仔 | 期货量化数据处理 | 欢迎公众号留言</em></p>
+<p><em>数据来源：akshare（新浪财经接口），仅供学习参考</em></p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
