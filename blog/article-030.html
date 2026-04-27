@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>article_30.md</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<p>农产品套利的逻辑和工业品完全不同。核心是季节性和种植面积竞争。</p>
+<h2>豆粕玉米比价（M/C）</h2>
+<p>豆粕（大豆压榨）和玉米是美国农业的两大主要作物。种植面积竞争关系：大豆/玉米比价高 --> 农民种更多大豆 --> 大豆供应增加；比价低 --> 农民种更多玉米。m_c_ratio = m_price / c_price #历史均值约2.5，范围2.0~3.0</p>
+<h2>USDA报告的影响</h2>
+<p>每年3月底的种植意向报告是最重要的数据：def usda_event_trade(df,report_date): before = df.loc[report_date - pd.Timedelta(days=3):report_date]; after = df.loc[report_date:report_date + pd.Timedelta(days=3)]; return before,after</p>
+<h2>季节性规律</h2>
+<p>4-6月种植季天气炒作启动；7-8月关键生长期波动最大；9-10月收割季价格低点；11-3月消费旺季价格相对稳定。成功率最高的配对是豆粕/玉米因为这两个品种数据连续性好季节性规律稳定。</p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
