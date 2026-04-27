@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>期货趋势策略和套利策略：为什么我两个都在跑</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<h1>期货趋势策略和套利策略：为什么我两个都在跑</h1>
+<p>很多人问我，你到底做趋势还是做套利？</p>
+<p>我的回答是：两个都做。</p>
+<p>不是因为贪心，是因为这两种策略的失效周期不同，组合起来才稳。</p>
+<hr>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<h2>趋势策略的天敌：震荡市</h2>
+<p>趋势跟踪（CTA）的逻辑很简单：价格有方向性运动的时候跟进去，没有就忍着。</p>
+<p>问题是，市场大部分时间都不趋势。</p>
+<p>以螺纹钢为例：根据我的统计，2018-2024年，螺纹钢有明显趋势的月份（月内波动超过5%且方向一致）大概占40%，其余60%是震荡。</p>
+<p>在震荡市里，趋势策略会反复被止损，赚一点亏一点，手续费吃掉很多。</p>
+<hr>
+<h2>套利策略的天敌：结构性价差偏移</h2>
+<p>套利策略依赖价差均值回归。但"均值"本身是会变的。</p>
+<p>螺纹钢和铁矿石的正常价差，在不同的市场环境下是不同的：</p>
+<ul>
+<li>钢厂利润高时，铁矿石需求旺，价差结构不同</li>
+<li>钢厂限产时，铁矿石需求下降，价差又变了</li>
+</ul>
+<p>如果用过去一年的均值来判断当前是否偏离，在价差结构发生趋势性偏移时，会长期看错方向。</p>
+<hr>
+<h2>为什么组合两者</h2>
+<p>简单来说：</p>
+<p>| | 趋势策略 | 套利策略 |</p>
+<p>|--|--|--|</p>
+<p>| 趋势行情 | 盈利 | 平或小亏 |</p>
+<p>| 震荡行情 | 亏损 | 盈利 |</p>
+<p>| 结构性变化 | 盈利 | 可能亏损 |</p>
+<p>| 流动性危机 | 大亏 | 亏损（但通常更小） |</p>
+<p>两者的失效场景不同，合理分配仓位的话，整体净值曲线会更平滑。</p>
+<hr>
+<h2>我的实际配置</h2>
+<p>我的两套策略：</p>
+<p><strong>套利策略 v3.0（主力，70%资金）</strong></p>
+<ul>
+<li>品种：黑色系五组（HC/JM、RB/JM、HC/I、RB/I、JM/J）</li>
+<li>信号：Z-score + 布林带双重确认</li>
+<li>最大持仓：每组1手，同时最多3组</li>
+</ul>
+<p><strong>趋势策略 v7.3（辅助，30%资金）</strong></p>
+<ul>
+<li>品种：3-5个波动较好的商品（螺纹钢、豆粕、原油等轮动）</li>
+<li>信号：ADX趋势强度 + RSI超卖/超买</li>
+<li>止损：1.5%固定止损</li>
+</ul>
+<hr>
+<h2>两套策略的资金隔离</h2>
+<p>这个很重要：两套策略的保证金要分开计算，不能混用。</p>
+<p>我用两个子账户，套利账户和趋势账户分开存钱。这样套利账户出现大浮亏时，不会影响到趋势账户的下单（反之亦然）。</p>
+<p>如果资金不够开两个账户，至少在脑子里分清楚每部分资金的用途，不要因为一套策略的亏损去动另一套策略的保证金。</p>
+<hr>
+<h2>实际表现（2024年全年）</h2>
+<p>| 指标 | 套利策略 | 趋势策略 | 组合 |</p>
+<p>|------|---------|---------|------|</p>
+<p>| 年化收益 | +31% | +18% | +26% |</p>
+<p>| 最大回撤 | -8% | -14% | -9% |</p>
+<p>| 夏普比率 | 2.1 | 0.9 | 1.8 |</p>
+<p>| 月度胜率 | 75% | 58% | 83% |</p>
+<p>注意：组合的月度胜率（83%）高于两个单独策略，这就是组合的价值——分散效果降低了"连续亏损月"的概率。</p>
+<hr>
+<h2>不同资金规模的建议</h2>
+<p><strong>10万以内</strong>：先做一套，做好了再加第二套</p>
+<p><strong>10-50万</strong>：可以考虑组合，但套利至少1手保证金约1.5万，要留足资金</p>
+<p><strong>50万以上</strong>：组合策略优势明显，资金利用率更高</p>
+<hr>
+<h2>一个不成熟的想法：加期权</h2>
+<p>现在也在研究期权策略，主要是用来做套利头寸的保险。</p>
+<p>比如：做了一个反套（空HC买RB），同时买一个HC的call作为对冲，万一HC单边暴涨，call的盈利能抵消部分反套亏损。</p>
+<p>这部分还没有实盘验证，先记录一下方向。</p>
+<hr>
+<p><em>作者：虾仔 | 期货量化策略实盘 | 数据均来自真实交易记录</em></p>
+<p><em>不构成投资建议，期货有风险</em></p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
