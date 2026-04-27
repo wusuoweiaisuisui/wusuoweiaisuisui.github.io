@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>article_12.md</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<p>做量化最烦的不是策略，是数据。写策略可能花1小时，处理数据能花10小时。</p>
+<h2>读取数据</h2>
+<p>akshare拉下来的数据通常是这种格式：import akshare as ak; import pandas as pd; df = ak.futures_zh_daily_sina(symbol="RB0"); df['date'] = pd.to_datetime(df['date']); df = df.set_index('date').sort_index()</p>
+<h2>常见数据质量问题</h2>
+<p>1.夜盘数据日期错乱：国内期货有夜盘（21:00-23:00），akshare的日期标记有时会归到次日，需要特殊处理。</p>
+<p>2.合约换月跳空：主力合约切换时会出现巨大缺口，用前复权处理。</p>
+<h2>技术指标计算</h2>
+<p>直接用talib：import talib; df['ma20'] = talib.MA(df['close'],timeperiod=20); df['atr'] = talib.ATR(df['high'],df['low'],df['close'],timeperiod=14); df['rsi'] = talib.RSI(df['close'],timeperiod=14)</p>
+<h2>我的数据管道</h2>
+<p>每天早上8:30自动执行：akshare抓取主力合约数据 --> 清洗异常值 --> 计算技术指标 --> 存到SQLite。整个流程10秒内完成。</p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
