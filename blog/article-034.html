@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>article_34.md</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<p>跨月套利（Calendar Spread）是期货特有的套利形式。近月和远月合约的价差反映了市场的库存和供需预期。</p>
+<h2>基本原理</h2>
+<p>正向市场（Contango）：远月合约大于近月合约（现货供过于求）。反向市场（Backwardation）：近月合约大于远月合约（现货紧缺）。价差的变动反映市场对供需边际变化的预期。</p>
+<h2>螺纹钢跨月套利</h2>
+<p>rb_main = get_price('RB2405'); rb_next = get_price('RB2406'); spread = rb_next - rb_main; z_score = (spread - spread.mean()) / spread.std(); if z_score > 1.5: print("入场：做空跨月价差（空远月多近月）"); elif z_score < -1.5: print("入场：做多跨月价差")</p>
+<h2>换月时的主力切换</h2>
+<p>螺纹钢主力合约通常是1/5/10月。合约到期前60天主力多头开始移仓；切换期间旧主力流动性下降新主力流动性上升。</p>
+<h2>实战经验</h2>
+<p>跨月套利的价差波动比跨品种小很多，仓位可以相对重一些持有期可以更长但滑点对收益的影响更大（需要低手续费通道）。</p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
