@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>article_42.md</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<p>Dual Thrust是我用过的最稳定的日内趋势策略之一。它简单客观不会过拟合。</p>
+<h2>策略思路</h2>
+<p>每日开盘前根据前N日的高低点计算一个区间。价格向上突破上轨 --> 做多；价格向下突破下轨 --> 做空；收盘前平仓。</p>
+<h2>Python实现</h2>
+<p>import pandas as pd; import numpy as np; def dual_thrust(df,k_up=0.5,k_down=0.5,period=20): df = df.copy(); rolling_high = df['high'].rolling(period).max().shift(1); rolling_low = df['low'].rolling(period).min().shift(1); open_price = df['open']; df['upper'] = open_price + k_up <em> (rolling_high - rolling_low); df['lower'] = open_price - k_down </em> (rolling_low - rolling_high); df['signal'] = 0; df.loc[df['high'] > df['upper'],'signal'] = 1; df.loc[df['low'] < df['lower'],'signal'] = -1; return df</p>
+<p>Dual Thrust最适合波动率高的品种（螺纹钢铁矿石）不适合波动低的（国债）。参数不要频繁调整设好之后坚持用。</p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
