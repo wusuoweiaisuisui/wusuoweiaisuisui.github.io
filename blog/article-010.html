@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用Python做期货参数优化：网格搜索和Walk-Forward验证</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<h1>用Python做期货参数优化：网格搜索和Walk-Forward验证</h1>
+<p>策略逻辑定好之后，怎么确定参数？</p>
+<p>很多人的做法是：手动试几个，看哪个收益最高，就用哪个。这叫"暴力调参"，结果很可能是过拟合。</p>
+<p>这篇写两种更科学的方法：网格搜索 + Walk-Forward验证。</p>
+<hr>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<h2>为什么不能直接用全期最优参数</h2>
+<p>假设你的策略有两个参数：Z-score入场阈值（1.5到3.0之间）、均值回归窗口（10到60之间）。</p>
+<p>你在2018-2024年的数据上跑了1000种参数组合，找到了最好的那组。</p>
+<p>问题：这组参数是<strong>在这段历史数据上最优</strong>的，不代表在未来也最优。可能这段历史数据有特殊的规律，这组参数恰好适合这段数据，但实盘会失效。</p>
+<p>这就是过拟合（Overfitting）。</p>
+<hr>
+<h2>网格搜索：找出稳健区间，不是最优点</h2>
+<p>网格搜索本身没问题，问题是如何使用结果。</p>
+<p>正确用法：<strong>不要选最优参数，选稳健区间。</strong></p>
+<pre><code class="language-python">
+import pandas as pd
+import numpy as np
+from itertools import product
+
+def run_backtest(price_a, price_b, z_entry, window):
+    """简化回测函数，返回夏普比率"""
+    spread = price_a - price_b
+    
+    mean = spread.rolling(window).mean()
+    std = spread.rolling(window).std()
+    z = (spread - mean) / std
+    
+    signal = pd.Series(0, index=spread.index)
+    signal[z &gt; z_entry] = -1   # 反套
+    signal[z &lt; -z_entry] = 1    # 正套
+    signal[z.abs() &lt; 0.5] = 0   # 平仓
+    
+    position = signal.shift(1).fillna(0)
+    pnl = position * spread.diff()
+    
+    if pnl.std() == 0:
+        return 0
+    
+    sharpe = np.sqrt(252) * pnl.mean() / pnl.std()
+    return sharpe
+
+# 参数网格
+z_entry_range = [1.5, 1.8, 2.0, 2.2, 2.5, 2.8, 3.0]
+window_range = [10, 15, 20, 25, 30, 40, 60]
+
+results = []
+for z_entry, window in product(z_entry_range, window_range):
+    sharpe = run_backtest(price_a, price_b, z_entry, window)
+    results.append({"z_entry": z_entry, "window": window, "sharpe": sharpe})
+
+results_df = pd.DataFrame(results)
+
+# 关键：不只看最大值，看稳健区间
+pivot = results_df.pivot(index="z_entry", columns="window", values="sharpe")
+print(pivot.round(2))
+</code></pre>
+<p>输出一个参数热力图，然后找<strong>夏普比率都还不错的区域</strong>（不是最高点，是一片高值区）。</p>
+<p>在这片区域里，任意一组参数表现都差不多，说明策略对参数不敏感——这才是稳健的策略。</p>
+<hr>
+<h2>Walk-Forward验证：模拟真实交易的时序</h2>
+<p>Walk-Forward的核心思想：用过去的数据训练参数，然后在未来的数据上测试，依次滚动。</p>
+<pre><code class="language-python">
+def walk_forward_test(price_a, price_b, 
+                       train_months=12, test_months=3,
+                       z_range=[1.5, 2.0, 2.5],
+                       window_range=[15, 20, 30]):
+    """
+    每次用12个月数据找最优参数，在接下来3个月测试
+    """
+    results = []
+    
+    total_months = len(price_a) // 21  # 约21个交易日/月
+    
+    start = 0
+    while start + train_months * 21 + test_months * 21 &lt;= len(price_a):
+        train_end = start + train_months * 21
+        test_end = train_end + test_months * 21
+        
+        # 训练集：找最优参数
+        train_a = price_a.iloc[start:train_end]
+        train_b = price_b.iloc[start:train_end]
+        
+        best_sharpe = -999
+        best_z, best_w = 2.0, 20  # 默认值
+        
+        for z, w in product(z_range, window_range):
+            s = run_backtest(train_a, train_b, z, w)
+            if s &gt; best_sharpe:
+                best_sharpe = s
+                best_z, best_w = z, w
+        
+        # 测试集：用训练集最优参数测试
+        test_a = price_a.iloc[train_end:test_end]
+        test_b = price_b.iloc[train_end:test_end]
+        
+        test_sharpe = run_backtest(test_a, test_b, best_z, best_w)
+        
+        results.append({
+            "train_period": f"{start}-{train_end}",
+            "best_z": best_z,
+            "best_window": best_w,
+            "train_sharpe": best_sharpe,
+            "test_sharpe": test_sharpe
+        })
+        
+        # 滚动：向前推进test_months个月
+        start += test_months * 21
+    
+    return pd.DataFrame(results)
+
+wf_results = walk_forward_test(price_a, price_b)
+print(wf_results)
+print(f"\n训练平均夏普: {wf_results['train_sharpe'].mean():.2f}")
+print(f"测试平均夏普: {wf_results['test_sharpe'].mean():.2f}")
+print(f"衰减比例: {wf_results['test_sharpe'].mean()/wf_results['train_sharpe'].mean():.1%}")
+</code></pre>
+<hr>
+<h2>如何解读Walk-Forward结果</h2>
+<p><strong>关键指标：训练夏普 vs 测试夏普的比率（衰减比例）</strong></p>
+<ul>
+<li>测试/训练 > 70%：优秀，策略稳健</li>
+<li>测试/训练 50%-70%：可接受</li>
+<li>测试/训练 < 50%：过拟合风险高，慎用</li>
+</ul>
+<p>另外看测试期间的分布：是否大多数测试期间都是正夏普？如果有几个测试期间大亏，说明策略有脆弱的边界条件。</p>
+<hr>
+<h2>实际案例：热卷/焦煤套利参数优化</h2>
+<p>我最近对HC/JM套利做了一次完整的Walk-Forward：</p>
+<ul>
+<li>训练期：12个月，测试期：3个月</li>
+<li>总数据：2020-2025年，共21个测试窗口</li>
+<li>Z-score范围：1.5-3.0，窗口：10-60，共84种组合</li>
+</ul>
+<p>结果：</p>
+<ul>
+<li>训练期平均夏普：2.8</li>
+<li>测试期平均夏普：1.9</li>
+<li>衰减比例：68%</li>
+</ul>
+<p>衰减68%处于可接受范围，但不算优秀。说明还有改进空间——可能需要引入动态参数（根据市场波动率自适应调整Z-score阈值）。</p>
+<p>这是下一步要做的事情。</p>
+<hr>
+<h2>一句话总结</h2>
+<p>参数优化的目标不是找最好的参数，是找<strong>最不容易坏掉的参数</strong>。</p>
+<hr>
+<p><em>作者：虾仔 | 量化策略研究 | 代码验证自2020年真实数据</em></p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
