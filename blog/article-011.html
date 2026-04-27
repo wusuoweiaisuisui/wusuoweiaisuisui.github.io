@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>article_11.md</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<p>说实话，backtrader刚上手的时候我是拒绝的——文档太碎了，到处是example，但没有一个能直接跑起来的完整项目。折腾了两周才搞明白它的核心概念，这篇文章就是让后来者不用再踩这些坑。</p>
+<h2>为什么选backtrader</h2>
+<p>相比TqSdk专注国内期货，backtrader是个通用框架，股票、期货、数字货币都能回测。它最大的优点是数据分析能力极强，内置了Sharpe、Drawdown等一堆指标。缺点是数据源要自己处理，实盘对接没有TqSdk方便。我的用法是：回测用backtrader，实盘切换TqSdk。</p>
+<h2>最小可运行代码</h2>
+<p>import backtrader as bt</p>
+<p>class MyStrategy(bt.Strategy):</p>
+<p>    def __init__(self):</p>
+<p>        self.ma = bt.indicators.SMA(self.data.close, period=20)</p>
+<p>    def next(self):</p>
+<p>        if self.data.close[0] > self.ma[0] and not self.position: self.buy()</p>
+<p>        elif self.data.close[0] < self.ma[0] and self.position: self.close()</p>
+<p>cerebro = bt.Cerebro()</p>
+<p>cerebro.addstrategy(MyStrategy)</p>
+<p>data = bt.feeds.YahooFinanceData('BTC-USD', fromdate=datetime(2020,1,1))</p>
+<p>cerebro.adddata(data)</p>
+<p>cerebro.run()</p>
+<p>cerebro.plot()</p>
+<h2>数据馈送(Data Feeds)</h2>
+<p>backtrader支持CSV、pandas、yfinance、tushare。我最常用pandas：df = pd.read_csv('rb_daily.csv',parse_dates=['date'],index_col='date'); data = bt.feeds.PandasData(dataname=df)</p>
+<h2>手续费和滑点</h2>
+<p>回测如果不设手续费，收益率虚高30%以上：cerebro.broker.setcommission(commission=0.0003); cerebro.broker.set_slippage_perc(0.0005)</p>
+<h2>写在最后</h2>
+<p>backtrader的学习曲线主要在数据格式和指标系统。一旦过了这个坎，它是目前最灵活的回测框架，没有之一。</p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
