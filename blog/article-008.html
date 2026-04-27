@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python量化交易：我用来处理期货数据的10个常用代码片段</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<h1>Python量化交易：我用来处理期货数据的10个常用代码片段</h1>
+<p>这不是一篇讲策略的文章，就是把我日常用得最频繁的代码片段整理出来。</p>
+<p>每次新建项目都要到处找，不如直接在这里存着。</p>
+<hr>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<h2>1. 获取并清洗期货日线数据</h2>
+<pre><code class="language-python">
+import akshare as ak
+import pandas as pd
+
+def get_futures(symbol, start="2020-01-01"):
+    df = ak.futures_zh_daily_sina(symbol=symbol)
+    df["date"] = pd.to_datetime(df["date"])
+    df = df.sort_values("date").reset_index(drop=True)
+    df = df[df["volume"] &gt; 0]
+    if start:
+        df = df[df["date"] &gt;= pd.to_datetime(start)]
+    return df
+</code></pre>
+<hr>
+<h2>2. 协整检验</h2>
+<pre><code class="language-python">
+from statsmodels.tsa.stattools import coint
+import numpy as np
+
+def check_cointegration(price_a, price_b):
+    """返回(是否协整, p值, 推荐对冲比)"""
+    log_a = np.log(price_a)
+    log_b = np.log(price_b)
+    
+    score, pvalue, _ = coint(log_a, log_b)
+    
+    # 计算OLS对冲比
+    from numpy.polynomial import polynomial as P
+    hedge_ratio = np.polyfit(log_b, log_a, 1)[0]
+    
+    return pvalue &lt; 0.05, pvalue, hedge_ratio
+
+# 用法
+is_coint, p, ratio = check_cointegration(rb["close"], hc["close"])
+print(f"协整: {is_coint}, p={p:.4f}, 对冲比={ratio:.3f}")
+</code></pre>
+<hr>
+<h2>3. 滚动Z-score计算</h2>
+<pre><code class="language-python">
+def rolling_zscore(series, window=20):
+    mean = series.rolling(window).mean()
+    std = series.rolling(window).std()
+    return (series - mean) / std
+</code></pre>
+<hr>
+<h2>4. 最大回撤计算</h2>
+<pre><code class="language-python">
+def max_drawdown(returns):
+    """传入每日收益率序列（小数形式）"""
+    cum = (1 + returns).cumprod()
+    peak = cum.expanding().max()
+    dd = (cum - peak) / peak
+    return dd.min()
+</code></pre>
+<hr>
+<h2>5. 夏普比率计算</h2>
+<pre><code class="language-python">
+def sharpe_ratio(returns, rf=0.02, periods=252):
+    """returns: 每日收益率, rf: 年化无风险利率"""
+    excess = returns - rf/periods
+    return np.sqrt(periods) * excess.mean() / returns.std()
+</code></pre>
+<hr>
+<h2>6. 布林带计算</h2>
+<pre><code class="language-python">
+def bollinger_bands(series, window=20, std_mult=2):
+    ma = series.rolling(window).mean()
+    std = series.rolling(window).std()
+    return {
+        "upper": ma + std_mult * std,
+        "middle": ma,
+        "lower": ma - std_mult * std
+    }
+</code></pre>
+<hr>
+<h2>7. ADX趋势强度</h2>
+<pre><code class="language-python">
+def calc_adx(df, period=14):
+    """df需要包含high, low, close列"""
+    high = df["high"]
+    low = df["low"]
+    close = df["close"]
+    
+    tr = pd.concat([
+        high - low,
+        (high - close.shift()).abs(),
+        (low - close.shift()).abs()
+    ], axis=1).max(axis=1)
+    
+    atr = tr.ewm(span=period, adjust=False).mean()
+    
+    up_move = high - high.shift()
+    down_move = low.shift() - low
+    
+    dm_plus = pd.Series(np.where((up_move &gt; down_move) &amp; (up_move &gt; 0), up_move, 0), index=df.index)
+    dm_minus = pd.Series(np.where((down_move &gt; up_move) &amp; (down_move &gt; 0), down_move, 0), index=df.index)
+    
+    di_plus = 100 * dm_plus.ewm(span=period, adjust=False).mean() / atr
+    di_minus = 100 * dm_minus.ewm(span=period, adjust=False).mean() / atr
+    
+    dx = 100 * (di_plus - di_minus).abs() / (di_plus + di_minus)
+    adx = dx.ewm(span=period, adjust=False).mean()
+    
+    return adx
+</code></pre>
+<hr>
+<h2>8. 钉钉推送</h2>
+<pre><code class="language-python">
+import requests
+import json
+
+DINGTALK_WEBHOOK = "https://oapi.dingtalk.com/robot/send?access_token=你的token"
+
+def push_dingtalk(title, content):
+    data = {
+        "msgtype": "markdown",
+        "markdown": {
+            "title": title,
+            "text": f"## {title}\n\n{content}"
+        }
+    }
+    try:
+        resp = requests.post(
+            DINGTALK_WEBHOOK,
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(data),
+            timeout=5
+        )
+        return resp.json().get("errcode") == 0
+    except:
+        return False
+</code></pre>
+<hr>
+<h2>9. 交易绩效统计</h2>
+<pre><code class="language-python">
+def trade_stats(trades_df):
+    """trades_df需要包含: pnl（盈亏）列"""
+    wins = trades_df[trades_df["pnl"] &gt; 0]
+    losses = trades_df[trades_df["pnl"] &lt;= 0]
+    
+    win_rate = len(wins) / len(trades_df) if len(trades_df) &gt; 0 else 0
+    avg_win = wins["pnl"].mean() if len(wins) &gt; 0 else 0
+    avg_loss = abs(losses["pnl"].mean()) if len(losses) &gt; 0 else 0
+    pnl_ratio = avg_win / avg_loss if avg_loss &gt; 0 else 0
+    
+    return {
+        "总交易数": len(trades_df),
+        "胜率": f"{win_rate:.1%}",
+        "盈亏比": f"{pnl_ratio:.2f}",
+        "总盈亏": f"{trades_df['pnl'].sum():.0f}",
+        "平均盈利": f"{avg_win:.0f}",
+        "平均亏损": f"-{avg_loss:.0f}"
+    }
+</code></pre>
+<hr>
+<h2>10. 简单回测框架</h2>
+<pre><code class="language-python">
+def simple_backtest(price, signals, initial_capital=100000, contract_size=10):
+    """
+    price: 收盘价序列
+    signals: 1=多仓 -1=空仓 0=空仓（每日信号）
+    """
+    capital = initial_capital
+    position = 0
+    entry_price = 0
+    equity = [capital]
+    
+    for i in range(1, len(price)):
+        sig = signals.iloc[i]
+        p = price.iloc[i]
+        
+        if position != sig:  # 信号变化，先平后开
+            if position != 0:
+                pnl = (p - entry_price) * position * contract_size
+                capital += pnl
+            
+            position = sig
+            entry_price = p
+        
+        # 计算浮动净值
+        unrealized = (p - entry_price) * position * contract_size if position != 0 else 0
+        equity.append(capital + unrealized)
+    
+    equity = pd.Series(equity, index=price.index)
+    returns = equity.pct_change().dropna()
+    
+    return {
+        "最终净值": equity.iloc[-1],
+        "总收益率": f"{(equity.iloc[-1]/initial_capital - 1):.1%}",
+        "夏普比率": f"{sharpe_ratio(returns):.2f}",
+        "最大回撤": f"{max_drawdown(returns):.1%}"
+    }
+</code></pre>
+<hr>
+<h2>说明</h2>
+<p>以上代码经过真实项目验证，可以直接用。</p>
+<p>有几个地方要注意：</p>
+<p>1. 回测里没有算手续费，实盘要加上（大约0.0001-0.0003每边）</p>
+<p>2. Z-score的window参数很敏感，20-60都有人用，建议做参数敏感性分析</p>
+<p>3. ADX的计算方法有多种，这个是简化版，足够日常使用</p>
+<p>如果有问题或者发现bug，欢迎留言。</p>
+<hr>
+<p><em>作者：虾仔 | 量化工具库整理 | 持续更新</em></p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
