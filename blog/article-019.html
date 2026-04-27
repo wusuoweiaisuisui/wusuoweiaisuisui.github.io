@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>article_19.md</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<p>ATR（Average True Range）是量化交易中最被低估的指标。大部分人知道它可以用来设止损，但其实用途远不止于此。</p>
+<h2>ATR的计算</h2>
+<p>True Range = max(H-L, abs(H-PC), abs(L-PC)); ATR = MA(True Range,N)</p>
+<p>其中PC是前一日收盘价，解决了跳空导致的日内波动计算和趋势行情中的真实波动范围问题。import talib; atr = talib.ATR(high,low,close,timeperiod=14)</p>
+<h2>用途1：动态止损</h2>
+<p>def atr_stop_loss(entry_price,atr_value,direction,multiplier=2.0): return entry_price - multiplier<em>atr_value if direction=='long' else entry_price + multiplier</em>atr_value。我用的是2倍ATR止损在螺纹钢上测试效果最好。</p>
+<h2>用途2：仓位计算</h2>
+<p>def calc_position(account_equity,risk_pct,atr,entry,contract_size=10): risk_amount = account_equity <em> risk_pct; risk_per_contract = atr </em> 2 * contract_size; return int(risk_amount / risk_per_contract)。单笔亏损不超过账户1%是我的铁律。</p>
+<h2>用途3：波动率归一化</h2>
+<p>不同品种波动率差异巨大直接比较没意义。ATR归一化后可以跨品种比较：def atr_normalized(atr,price): return atr / price * 100</p>
+<p>螺纹钢ATR%约1.5%；黄金约0.8%；铁矿约2.5%。铁矿波动是黄金的3倍同样仓位风险差3倍。</p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
