@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>article_31.md</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<p>金银比（Gold/Silver Ratio）是历史最悠久的宏观套利指标之一。金银比的历史均值约60但波动区间很大（30~100）。</p>
+<h2>金银比的经济含义</h2>
+<p>金银比本质是工业属性vs避险属性的博弈：白银工业属性更强（电子、太阳能板）；黄金避险属性更强（央行储备、首饰）。经济繁荣期工业需求旺白银涨金银比下降；经济危机期避险需求旺黄金涨金银比上升。</p>
+<h2>数据验证</h2>
+<p>au = pd.read_csv('au_monthly.csv')['close']; ag = pd.read_csv('ag_monthly.csv')['close']; ratio = au / ag; print(f"均值: {ratio.mean():.1f}") #约67.2; print(f"最小: {ratio.min():.1f}") #约31.2; print(f"最大: {ratio.max():.1f}") #约126.7</p>
+<h2>策略逻辑</h2>
+<p>金银比大于80 --> 白银被低估 --> 多银空金；金银比小于50 --> 白银被高估 --> 多金空银。</p>
+<h2>关键风险</h2>
+<p>均值回归周期极长（金银比从30到80可能走2-3年）；避险和工业属性的切换不频繁；保证金占用高。我把这套策略仓位控制在总资金的5%以内作为宏观对冲配置。</p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
