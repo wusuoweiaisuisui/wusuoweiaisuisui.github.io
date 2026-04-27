@@ -8,10 +8,13 @@
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
         h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
         h2 { color: #555; margin-top: 30px; }
-        p { color: #444; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
         code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
         pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
         blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
         .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
         .back-link a { color: #e74c3c; text-decoration: none; }
     </style>
@@ -20,6 +23,8 @@
 <h1>黑色系期货套利：我用Python跑了三年，踩了哪些坑</h1>
 <p>最近有不少朋友在后台问我，期货套利到底能不能做？说实话，三年前我刚入坑的时候，也觉得这是个"躺赚"的生意——价差嘛，总要回归的。</p>
 <p>然后我就亏了两个月。</p>
+<hr>
+<hr>
 <p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
 <p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
 <p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
@@ -29,6 +34,7 @@
 <p>但"往往"不等于"一定"。</p>
 <p>2021年焦煤一路暴涨，螺纹钢没跟上，导致我的正套仓位扛了三周。那段时间账户浮亏7%，每天盯着屏幕难受。最后Z-score确实回归了，但期间的煎熬远超预期。</p>
 <p><strong>这是我学到的第一课：价差均值回归，但时间可以很长。</strong></p>
+<hr>
 <h2>协整关系是核心逻辑</h2>
 <p>套利的数学基础是协整检验（Cointegration Test）。两个品种的对数价格序列，如果存在协整关系，那它们的线性组合是平稳的——也就是说，价差会在某个均值附近波动，不会无限发散。</p>
 <p>用Python做这个检验很简单：</p>
@@ -42,6 +48,7 @@ if pvalue &lt; 0.05:
     print(f"协整成立，p={pvalue:.4f}")
 </code></pre>
 <p>p值小于0.05，通常认为协整关系显著。但要注意——<strong>协整检验本身就有局限性</strong>，样本外失效是常见问题。我每隔3个月重新跑一次检验，看关系是否还稳定。</p>
+<hr>
 <h2>Z-score策略的实际操作</h2>
 <p>协整确认后，计算价差的Z-score来决定入场：</p>
 <pre><code class="language-">
@@ -51,6 +58,7 @@ Z = (当前价差 - 历史均值) / 历史标准差
 <p>当Z < -2（价差异常偏低）→ 正套（买A空B）</p>
 <p>当Z回归到0附近 → 止盈平仓</p>
 <p>听起来简单，实际不是。</p>
+<hr>
 <h2>三个坑我都踩过</h2>
 <p><strong>第一个坑：用收盘价计算，实盘用开盘价成交</strong></p>
 <p>回测爽，实盘一看，价差已经跑了100个点。原因是日线收盘价和次日开盘之间有跳空，用前一天的Z-score开盘就进，滑点巨大。</p>
@@ -61,6 +69,7 @@ Z = (当前价差 - 历史均值) / 历史标准差
 <p><strong>第三个坑：多空方向搞反了</strong></p>
 <p>这个说出来有点丢人。反套是"价差偏高时卖A买B"，但我代码里写的通知消息是固定"买A卖B"——结果通知说正套，实际下的是反套仓位，搞了一段时间才发现。</p>
 <p>教训：<strong>一定要对着实盘持仓截图校验通知消息，不能光看代码逻辑。</strong></p>
+<hr>
 <h2>实盘成绩（2025年数据）</h2>
 <p>截至今年，黑色系五组配对（HC/RB、HC/JM、RB/JM、HC/I、RB/I）累计完成26笔交易：</p>
 <ul>
@@ -70,10 +79,12 @@ Z = (当前价差 - 历史均值) / 历史标准差
 <li>年化收益：+31%（以保证金计算）</li>
 </ul>
 <p>不算惊艳，但稳定。套利策略本身不追求暴利，目标是夏普比率，不是绝对收益率。</p>
+<hr>
 <h2>后记</h2>
 <p>有人问我，现在做黑色系套利还有机会吗？我的判断是：<strong>市场越来越难，但机会还在</strong>。产业链关联依然存在，机构化进程让价格更有效但不会完全消灭价差机会。</p>
 <p>关键在于：你得有稳定的技术框架，有风控纪律，还要能承受盘中的煎熬。</p>
 <p>这三点，缺一不可。</p>
+<hr>
 <p><em>作者：虾仔 | 量化交易实践者 | 公众号：股票期货</em></p>
 <p><em>文章数据均来自实盘交易记录，不构成投资建议</em></p>
 <p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
@@ -81,7 +92,7 @@ Z = (当前价差 - 历史均值) / 历史标准差
 <p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
 <p></div></p>
     <div class="back-link">
-        <a href="/">← 返回首页</a>
+        <a href="/">Back to Home</a>
     </div>
 </body>
 </html>
