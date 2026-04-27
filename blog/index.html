@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客文章 - 虾仔科技有限公司</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #333; }
+        nav { background: white; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        .nav-logo { font-size: 24px; font-weight: bold; color: #1a365d; display: flex; align-items: center; gap: 10px; }
+        .nav-links a { color: #666; text-decoration: none; margin-left: 25px; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #3182ce; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        h1 { color: #1a365d; margin-bottom: 30px; font-size: 32px; }
+        .subtitle { color: #666; margin-bottom: 40px; font-size: 18px; }
+        .articles { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
+        .article-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 2px 15px rgba(0,0,0,0.06); transition: transform 0.3s, box-shadow 0.3s; }
+        .article-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .article-num { color: #3182ce; font-size: 14px; margin-bottom: 10px; font-weight: 600; }
+        .article-title { color: #1a365d; font-size: 20px; margin-bottom: 12px; line-height: 1.4; }
+        .article-card a { text-decoration: none; color: inherit; display: block; }
+        .article-desc { color: #666; font-size: 15px; line-height: 1.7; }
+        .article-meta { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .article-tag { background: #ebf8ff; color: #3182ce; padding: 5px 12px; border-radius: 20px; font-size: 13px; }
+        .article-link { color: #e74c3c; font-weight: 500; font-size: 14px; }
+        .back-home { display: inline-block; margin-bottom: 20px; color: #666; text-decoration: none; }
+        .back-home:hover { color: #3182ce; }
+        footer { background: #2d3748; color: white; padding: 30px 20px; text-align: center; margin-top: 60px; }
+        footer a { color: #d69e2e; text-decoration: none; }
+        @media (max-width: 768px) {
+            nav { flex-direction: column; gap: 15px; padding: 15px 20px; }
+            .articles { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-logo"><span>🦐</span><span>虾仔科技</span></div>
+        <div class="nav-links">
+            <a href="/">首页</a>
+            <a href="/" onclick="history.back(); return false;">博客文章</a>
+            <a href="/#contact">联系我们</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <a href="/" class="back-home">← 返回首页</a>
+        <h1>📚 博客文章</h1>
+        <p class="subtitle">分享量化交易、期货投资、金融科技的实战经验与思考</p>
+        
+        <div class="articles">
+            <div class="article-card"><a href="article-001.html"><div class="article-num">#001</div><h3 class="article-title">期货市场中的对冲策略：如何在波动中稳定获利</h3><p class="article-desc">对冲是机构投资者常用的风险管理手段，通过同时建立方向相反的头寸来降低投资组合的系统性风险...</p><div class="article-meta"><span class="article-tag">套利策略</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-002.html"><div class="article-num">#002</div><h3 class="article-title">量化交易的入门指南：从零开始构建你的第一个策略</h3><p class="article-desc">量化交易是一种利用数学模型和计算机程序来执行交易策略的方法。它通过系统化的方式消除了人为情绪的干扰...</p><div class="article-meta"><span class="article-tag">入门指南</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-003.html"><div class="article-num">#003</div><h3 class="article-title">螺纹钢期货的季节性规律：把握金九银十的投资机会</h3><p class="article-desc">螺纹钢期货是国内期货市场上最活跃的品种之一，其价格走势受到宏观经济、房地产需求、基建投资等多重因素影响...</p><div class="article-meta"><span class="article-tag">品种分析</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-004.html"><div class="article-num">#004</div><h3 class="article-title">程序化交易系统的架构设计：从数据到执行的全流程</h3><p class="article-desc">一个完整的程序化交易系统需要包含数据源、策略引擎、风控模块、下单执行等多个组件...</p><div class="article-meta"><span class="article-tag">技术架构</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-005.html"><div class="article-num">#005</div><h3 class="article-title">铁矿石期货深度解析：供需格局与价格驱动因素</h3><p class="article-desc">铁矿石是钢铁工业的重要原材料，其价格波动直接影响钢材生产成本，进而影响整个黑色产业链...</p><div class="article-meta"><span class="article-tag">品种分析</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-006.html"><div class="article-num">#006</div><h3 class="article-title">布林带指标的实战应用：趋势跟踪与均值回归的双重策略</h3><p class="article-desc">布林带（Bollinger Bands）是由约翰·布林格发明的一种技术分析工具，由中轨、上轨和下轨三条线组成...</p><div class="article-meta"><span class="article-tag">技术指标</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-007.html"><div class="article-num">#007</div><h3 class="article-title">期货合约间的价差交易：跨月价差的统计特性分析</h3><p class="article-desc">跨月价差交易是期货市场中一种重要的套利方式，通过利用同一品种不同交割月份合约之间的价差波动来获取收益...</p><div class="article-meta"><span class="article-tag">套利策略</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-008.html"><div class="article-num">#008</div><h3 class="article-title">如何利用Python构建自己的量化回测系统</h3><p class="article-desc">量化回测是验证交易策略有效性的关键步骤，一个好的回测系统能够帮助交易者发现策略的优缺点...</p><div class="article-meta"><span class="article-tag">Python开发</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-009.html"><div class="article-num">#009</div><h3 class="article-title">商品期货的产业链分析：从原油到化工品的完整链条</h3><p class="article-desc">商品期货的产业链分析是基本面研究的重要基础，了解上下游关系有助于发现跨品种套利机会...</p><div class="article-meta"><span class="article-tag">产业链</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-010.html"><div class="article-num">#010</div><h3 class="article-title">高频交易策略初探：订单簿动态与做市商逻辑</h3><p class="article-desc">高频交易（HFT）是量化交易领域的一个重要分支，以极高的速度执行大量交易订单...</p><div class="article-meta"><span class="article-tag">高频交易</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-011.html"><div class="article-num">#011</div><h3 class="article-title">MACD指标在期货交易中的实战技巧</h3><p class="article-desc">MACD（Moving Average Convergence Divergence）是技术分析中最常用的指标之一，通过对价格进行平滑处理来识别趋势方向...</p><div class="article-meta"><span class="article-tag">技术指标</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-012.html"><div class="article-num">#012</div><h3 class="article-title">期货交易中的仓位管理：如何科学控制风险</h3><p class="article-desc">仓位管理是交易成功的关键因素之一，合理的仓位控制能够在保护资金的同时最大化收益潜力...</p><div class="article-meta"><span class="article-tag">风险管理</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-013.html"><div class="article-num">#013</div><h3 class="article-title">农产品期货的季节性投资机会分析</h3><p class="article-desc">农产品期货具有明显的季节性特征，受气候、播种周期、收获季节等因素影响较大...</p><div class="article-meta"><span class="article-tag">季节性</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-014.html"><div class="article-num">#014</div><h3 class="article-title">统计套利的数学原理与Python实现</h3><p class="article-desc">统计套利是一种基于数学统计原理的交易方法，通过发现资产间的统计关系偏离来构建中性策略...</p><div class="article-meta"><span class="article-tag">统计套利</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-015.html"><div class="article-num">#015</div><h3 class="article-title">期货夜盘交易策略：把握外盘联动机会</h3><p class="article-desc">国内期货市场夜盘交易时间为21:00-23:00（部分品种至凌晨2:30），这一时段与欧美市场高度重叠...</p><div class="article-meta"><span class="article-tag">夜盘策略</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-016.html"><div class="article-num">#016</div><h3 class="article-title">RSI相对强弱指标的高级用法与参数优化</h3><p class="article-desc">RSI（Relative Strength Index）是衡量价格变动速度和幅度的动量指标，取值范围0-100...</p><div class="article-meta"><span class="article-tag">技术指标</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-017.html"><div class="article-num">#017</div><h3 class="article-title">期货交易心理建设：克服恐惧与贪婪</h3><p class="article-desc">交易心理是影响交易结果的关键因素之一，许多交易者技术分析能力扎实，却在实战中屡屡亏损...</p><div class="article-meta"><span class="article-tag">交易心理</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-018.html"><div class="article-num">#018</div><h3 class="article-title">跨品种套利实战：螺纹钢与热卷的价差分析</h3><p class="article-desc">螺纹钢和热卷同属钢材产业链上游产品，两者的价差受到产能利用率、库存周期、下游需求等因素影响...</p><div class="article-meta"><span class="article-tag">套利策略</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-019.html"><div class="article-num">#019</div><h3 class="article-title">量化策略的因子分析：Alpha因子挖掘与评估</h3><p class="article-desc">因子是量化投资的核心概念，通过识别能够预测资产收益率的因子来构建有效的投资组合...</p><div class="article-meta"><span class="article-tag">因子投资</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-020.html"><div class="article-num">#020</div><h3 class="article-title">期货爆仓案例分析：杠杆的双刃剑效应</h3><p class="article-desc">杠杆是期货市场最重要的特征之一，它既能放大收益，也能放大亏损，甚至导致爆仓...</p><div class="article-meta"><span class="article-tag">风险管理</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-021.html"><div class="article-num">#021</div><h3 class="article-title">铜期货与宏观经济的联动关系分析</h3><p class="article-desc">铜被称为"经济晴雨表"，因其广泛应用于电力、建筑、交通等多个领域，对经济周期高度敏感...</p><div class="article-meta"><span class="article-tag">品种分析</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-022.html"><div class="article-num">#022</div><h3 class="article-title">使用Backtrader构建量化策略的完整教程</h3><p class="article-desc">Backtrader是Python生态中最流行的量化回测框架之一，支持灵活的数据加载、策略开发和性能分析...</p><div class="article-meta"><span class="article-tag">工具教程</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-023.html"><div class="article-num">#023</div><h3 class="article-title">期货市场的流动性分析：价差深度与冲击成本</h3><p class="article-desc">流动性是衡量市场效率的重要指标，低流动性的市场往往存在较大的买卖价差和冲击成本...</p><div class="article-meta"><span class="article-tag">市场结构</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-024.html"><div class="article-num">#024</div><h3 class="article-title">期权与期货的组合策略：保护性看跌与备兑看涨</h3><p class="article-desc">期权与期货的组合能够构建出灵活多变的策略，满足不同风险偏好的投资者需求...</p><div class="article-meta"><span class="article-tag">组合策略</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-025.html"><div class="article-num">#025</div><h3 class="article-title">量化回测中的过拟合问题及解决方法</h3><p class="article-desc">过拟合是量化交易中最常见的问题之一，指策略在历史数据上表现优异，但在实盘中却表现糟糕...</p><div class="article-meta"><span class="article-tag">策略优化</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-026.html"><div class="article-num">#026</div><h3 class="article-title">黄金期货的避险属性与投资逻辑</h3><p class="article-desc">黄金作为传统的避险资产，在地缘政治紧张、经济不确定性增加时往往表现突出...</p><div class="article-meta"><span class="article-tag">品种分析</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-027.html"><div class="article-num">#027</div><h3 class="article-title">期货交易数据处理：从原始数据到策略信号</h3><p class="article-desc">数据是量化交易的基础，高质量的数据处理能够显著提升策略的稳定性和可靠性...</p><div class="article-meta"><span class="article-tag">数据处理</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-028.html"><div class="article-num">#028</div><h3 class="article-title">ATR平均真实波幅在止损设置中的应用</h3><p class="article-desc">ATR（Average True Range）是衡量市场波动性的重要指标，能够帮助交易者设置合理的止损位置...</p><div class="article-meta"><span class="article-tag">技术指标</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-029.html"><div class="article-num">#029</div><h3 class="article-title">期货公司的保证金制度与风险控制</h3><p class="article-desc">保证金是期货交易的核心机制，投资者只需支付合约价值的一部分就能参与交易...</p><div class="article-meta"><span class="article-tag">基础入门</span><span class="article-link">阅读全文 →</span></div></a></div>
+            <div class="article-card"><a href="article-030.html"><div class="article-num">#030</div><h3 class="article-title">趋势跟踪策略的设计与资金管理</h3><p class="article-desc">趋势跟踪是期货市场中最经典也最有效的策略流派之一，其核心理念是"让利润奔跑"...</p><div class="article-meta"><span class="article-tag">趋势策略</span><span class="article-link">阅读全文 →</span></div></a></div>
+        </div>
+        
+        <p style="margin-top: 40px; text-align: center; color: #666; font-size: 16px;">
+            共收录 100 篇专业文章，持续更新中...
+        </p>
+    </div>
+    
+    <footer>
+        <p>© 2026 <a href="/">虾仔科技有限公司</a> | 专注于金融科技创新</p>
+    </footer>
+</body>
+</html>
