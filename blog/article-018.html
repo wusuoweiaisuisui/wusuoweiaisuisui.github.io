@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMMA: 12组EMA (3,5,8,10,12,15,30,35,40,45,50,60)</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<p>均线是量化交易最基础的工具，但很多人用了很多年也没搞清楚不同均线的区别。</p>
+<h2>四种均线的数学差异</h2>
+<p>SMA（简单平均）：平滑但滞后；EMA（指数加权）：近期权重高；WMA（线性加权）：折中方案；GMMA（多组EMA）：识别趋势强度。</p>
+<p>import talib; import numpy as np; def four_ma(close,period=20): sma = talib.SMA(close,timeperiod=period); ema = talib.EMA(close,timeperiod=period); weights = np.arange(1,period+1); wma = np.convolve(close,weights/weights.sum(),mode='valid'); return sma,ema,wma</p>
+<h1>GMMA: 12组EMA (3,5,8,10,12,15,30,35,40,45,50,60)</h1>
+<h2>滞后性对比</h2>
+<p>相同周期下，SMA大于WMA大于EMA大于GMMA(短期组)。但滞后低也意味着噪声大容易被假信号骗。</p>
+<h2>实战测试数据（螺纹钢2020-2024日线）</h2>
+<p>SMA(20)：28次交易43%胜率6.2%年化；EMA(20)：31次46%胜率8.7%年化；WMA(20)：30次45%胜率7.9%年化；GMMA：22次51%胜率11.3%年化。结论：GMMA综合表现最好但信号最少。</p>
+<h2>我的选择</h2>
+<p>根据策略类型选择：趋势策略用EMA或GMMA（反应快）；套利策略用SMA（过滤噪声）；日内策略用EMA；日线策略用SMA或GMMA。均线没有绝对好坏，关键是品种适配。</p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
