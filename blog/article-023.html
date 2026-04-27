@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>article_23.md</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<p>VPIN（Volume-synchronized Probability of Informed Trading）是一个被低估的指标。它能提前识别机构订单的涌入，对期货大波动有预警作用。</p>
+<h2>VPIN的原理</h2>
+<p>把成交量分成买量和卖量（通过价格变化方向估算），计算单位时间内信息交易概率。import numpy as np; import pandas as pd; def calculate_vpin(df,bucket_size=5000): df = df.copy(); df['dv'] = np.where(df['close'].diff() > 0,df['volume'],-df['volume']); df['abs_dv'] = df['dv'].abs(); df['cumvol'] = df['volume'].cumsum(); df['bucket'] = df['cumvol'] // bucket_size; vpin_data = df.groupby('bucket').agg({'abs_dv':'sum','volume':'sum'}); vpin_data['vpin'] = vpin_data['abs_dv'] / vpin_data['volume']; return vpin_data['vpin']</p>
+<h2>实战用法</h2>
+<p>def vpin_signal(vpin_series,threshold=0.65): current_vpin = vpin_series.iloc[-1]; vpin_mean = vpin_series.mean(); vpin_std = vpin_series.std(); z_score = (current_vpin - vpin_mean) / vpin_std; return z_score > threshold</p>
+<h2>注意事项</h2>
+<p>VPIN需要tick级数据分钟级勉强可用；不同品种的VPIN阈值不同需要历史校准；VPIN是先行指标不能单独用必须配合其他信号。我把它作为大盘可能有大动作的预警信号使用，不作为入场依据。</p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
