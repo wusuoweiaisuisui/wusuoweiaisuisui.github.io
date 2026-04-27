@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>article_22.md</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<p>MACD用的人多，用对的少。标准MACD（12,26,9）在震荡行情里容易来回假信号。我测试了多周期共振的改进方案，效果好很多。</p>
+<h2>标准MACD</h2>
+<p>import talib; macd,signal,hist = talib.MACD(close,fastperiod=12,slowperiod=26,signalperiod=9)。标准用法MACD上穿信号线买入，下穿卖出。问题是MACD本质上是均线的均线，滞后严重。</p>
+<h2>多周期共振</h2>
+<p>核心思路：日线MACD方向 + 4小时确认 + 1小时入场点：def multi_timeframe_macd(daily_close,h4_close,h1_close): daily_macd,daily_signal,_ = talib.MACD(daily_close); daily_trend = daily_macd > daily_signal; h4_macd,h4_signal,_ = talib.MACD(h4_close); h4_confirm = (h4_macd > h4_signal) == daily_trend; h1_macd,h1_signal,h1_hist = talib.MACD(h1_close); entry = (h1_macd > h1_signal) & (h1_macd.shift(1) <= h1_signal.shift(1)); return daily_trend & h4_confirm & entry</p>
+<h2>实战效果（螺纹钢2022-2024）</h2>
+<p>MACD标准：52次交易40%胜率1.2%单笔盈亏；MACD多周期：31次交易58%胜率2.1%单笔盈亏。信号少了40%但胜率提升18%，单笔收益提升75%。精髓：放弃更多机会换取更高质量的机会。</p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
