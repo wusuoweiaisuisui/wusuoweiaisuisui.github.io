@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>期货回测报告怎么看：我用这5个指标筛掉了80%的"好看策略"</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<h1>期货回测报告怎么看：我用这5个指标筛掉了80%的"好看策略"</h1>
+<p>很多人做出一个回测，看到收益曲线向右上方倾斜，就觉得策略可以了。然后实盘一上，钱没了。</p>
+<p>问题出在哪？不是策略不好，是看回测的方式不对。</p>
+<p>这篇文章说的是我用来筛策略的5个核心指标。</p>
+<hr>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<h2>为什么收益率不是最重要的指标</h2>
+<p>先破一个迷信：<strong>年化收益率不是评价策略的核心指标。</strong></p>
+<p>我见过年化收益率60%的策略，最大回撤达到45%，夏普比率0.8。这种策略在熊市可以让你账户直接腰斩，然后需要翻倍才能回到原点。</p>
+<p>反过来，一个年化15%但最大回撤只有5%的策略，夏普比率可能超过2，实际上更值得跑。</p>
+<hr>
+<h2>指标1：最大回撤（Max Drawdown）</h2>
+<p>最大回撤是净值从最高点到最低点的跌幅。公式：</p>
+<pre><code class="language-">
+MDD = (峰值净值 - 谷值净值) / 峰值净值
+</code></pre>
+<p>我的经验阈值：</p>
+<ul>
+<li>< 10%：优秀，适合大资金</li>
+<li>10% - 20%：可接受，日常监控</li>
+<li>> 30%：危险，基本不跑</li>
+</ul>
+<p>注意：最大回撤通常在压力测试中会更大。如果历史回测最大回撤是15%，实盘压力下可能达到25%。乘以1.5倍做心理准备。</p>
+<hr>
+<h2>指标2：夏普比率（Sharpe Ratio）</h2>
+<p>夏普 = (年化收益率 - 无风险利率) / 年化波动率</p>
+<p>直白说，就是"每承担一单位风险，能换来多少收益"。</p>
+<p>一般来说：</p>
+<ul>
+<li>< 1：一般，市场上大把替代品</li>
+<li>1 - 1.5：良好</li>
+<li>> 2：优秀，基本可以实盘</li>
+<li>> 3：怀疑过拟合</li>
+</ul>
+<p>我有一次做参数优化，找到一组参数夏普比率4.2，高兴了三天。后来做样本外测试，夏普直接跌到0.6。</p>
+<p><strong>夏普比率特别高的策略，第一反应应该是怀疑，不是高兴。</strong></p>
+<hr>
+<h2>指标3：胜率 vs 盈亏比</h2>
+<p>这两个指标要一起看，不能单独看。</p>
+<p>胜率40%的策略可以盈利，如果平均盈利是平均亏损的3倍。</p>
+<p>胜率80%的策略也可以亏损，如果每次亏损金额是盈利的5倍。</p>
+<p>Kelly公式可以算最优仓位：</p>
+<pre><code class="language-">
+f = (胜率 × 盈亏比 - (1 - 胜率)) / 盈亏比
+</code></pre>
+<p>例如：胜率55%，盈亏比1.5</p>
+<p>f = (0.55 × 1.5 - 0.45) / 1.5 = (0.825 - 0.45) / 1.5 = 0.25</p>
+<p>最优下注25%的仓位。实际使用时一般取一半（12.5%），更保守。</p>
+<hr>
+<h2>指标4：交易次数</h2>
+<p>样本量决定置信度。</p>
+<p>一年只有8笔交易的策略，就算胜率100%也没参考价值——样本太少，可能只是运气。</p>
+<p>我的标准：<strong>至少50笔以上的交易</strong>才有统计意义。策略开发阶段尽量跑3-5年的历史数据，确保交易次数充足。</p>
+<p>另外，交易次数太多也要注意——日内高频策略手续费会吃掉很大一部分收益，回测时要把手续费算进去。</p>
+<hr>
+<h2>指标5：Walk-Forward测试（滚动窗口验证）</h2>
+<p>这是最重要也最容易被忽略的。</p>
+<p>普通回测：在全部历史数据上跑，找最优参数。</p>
+<p>Walk-Forward：把数据分成若干段，在前几段"训练"参数，在后几段"测试"，依次滚动。</p>
+<p>为什么重要？因为普通回测里你可以无限调参，直到找到在这段数据上"最好"的参数——但这些参数在未来大概率不管用。Walk-Forward强制你模拟"用过去的参数交易未来"的场景。</p>
+<p>一个参数：如果Walk-Forward测试结果比全期回测差50%以上，这个策略大概率是过拟合的。</p>
+<hr>
+<h2>实际案例：我是怎么用这5个指标否掉一个策略的</h2>
+<p>去年开发了一个螺纹钢的RSI均值回归策略：</p>
+<ul>
+<li>年化收益：+45%（看起来不错）</li>
+<li>最大回撤：-32%（太大了）</li>
+<li>夏普比率：0.7（达不到阈值）</li>
+<li>交易次数：29次，胜率55%（样本量还行）</li>
+<li>Walk-Forward：样本外收益跌到+8%（严重过拟合）</li>
+</ul>
+<p>四项不达标，一项勉强。直接否掉，不入实盘。</p>
+<p>然后换了参数，换了品种（热卷+焦煤套利），这5个指标才都达标。</p>
+<hr>
+<h2>工具推荐</h2>
+<p>我现在用Python自建回测框架，指标计算这样写：</p>
+<pre><code class="language-python">
+def calc_stats(returns):
+    annual_return = (1 + returns.mean()) ** 252 - 1
+    annual_vol = returns.std() * np.sqrt(252)
+    sharpe = (annual_return - 0.02) / annual_vol  # 2%无风险利率
+    
+    cum_returns = (1 + returns).cumprod()
+    rolling_max = cum_returns.expanding().max()
+    drawdown = (cum_returns - rolling_max) / rolling_max
+    max_drawdown = drawdown.min()
+    
+    return {
+        "年化收益": f"{annual_return:.1%}",
+        "年化波动": f"{annual_vol:.1%}",
+        "夏普比率": f"{sharpe:.2f}",
+        "最大回撤": f"{max_drawdown:.1%}"
+    }
+</code></pre>
+<hr>
+<p><em>作者：虾仔 | 期货量化研究 | 数据来源实盘记录</em></p>
+<p><em>本文不构成投资建议，期货有风险，交易需谨慎</em></p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
