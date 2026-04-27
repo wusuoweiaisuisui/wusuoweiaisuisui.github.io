@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>article_45.md</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<p>均线策略的参数优化花了半年才搞明白。网上的参数推荐大多是错的。</p>
+<h2>常见的参数陷阱</h2>
+<p>1.周期选择的人云亦云：10/20/60是外汇交易商的习惯不一定适合期货。我测了螺纹钢多个参数组合发现最优是MA(15,35)不是常用的MA(10,20)。2.优化过拟合：网格搜索参数时测的参数组合越多越容易找到历史最优但未来最差的参数。解决方法用Walk-Forward验证。3.周期参数的流动性约束：60日均线意味着要等60天才能形成一次信号。</p>
+<h2>Walk-Forward验证</h2>
+<p>def walk_forward_validation(df,train_ratio=0.7): train_size = int(len(df) * train_ratio); train = df.iloc[:train_size]; test = df.iloc[train_size:]; best_params = optimize_parameters(train); test_results = run_strategy(test,best_params); return best_params,test_results</p>
+<h2>我的最终方案</h2>
+<p>螺纹钢：快线15慢线35（波动适中）；铁矿石：快线10慢线25（波动大用快线）；黄金：快线20慢线60（波动小用慢线）。</p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
