@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>做期货亏掉30%之后，我重新学会的三件事</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<h1>做期货亏掉30%之后，我重新学会的三件事</h1>
+<p>这篇文章不讲策略，讲人。</p>
+<p>2022年，我做了半年单边投机，最终亏损账户总值的28%。这是我做期货以来最惨的一段时间。</p>
+<p>不是说亏钱不对，市场里每天都有人亏钱。我想说的是，那段时间我做的很多决策，事后看都是错的，而且是<strong>可以避免的错误</strong>。</p>
+<hr>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<h2>第一件事：止损是策略的一部分，不是认输</h2>
+<p>以前觉得止损是认输，是放弃。每次止损了，会有一种挫败感——"就差一点点，再等等就好了。"</p>
+<p>然后等了，亏得更多。</p>
+<p>现在我的理解是：<strong>止损是策略的执行，不是策略的失败。</strong></p>
+<p>当我设定止损位在-2%时，触发止损是策略的正常输出。这笔交易亏了，但策略还在正确运行。</p>
+<p>没有止损才是策略失败——因为你让这笔交易有可能变成一个毁掉整个账户的错误。</p>
+<hr>
+<h2>第二件事：仓位管理比方向判断重要</h2>
+<p>我见过很多人方向判断能力很强，但账户一直不赚钱。原因往往是仓位管理混乱。</p>
+<p>行情好的时候重仓，行情差的时候也重仓（因为想捞回来），然后一次大亏损就把之前的积累全部归零。</p>
+<p>仓位管理的核心是：<strong>每笔交易的最大风险额是固定的</strong>，不管你多看好这笔行情。</p>
+<p>比如：账户10万，每笔交易最大亏损1%（1000元）。螺纹钢一个点10元，止损设在50点，那么最多开2手（2×50×10=1000元）。</p>
+<p>这样即使连续亏10笔，账户只亏10%，还有机会翻身。</p>
+<hr>
+<h2>第三件事：复盘比交易本身更重要</h2>
+<p>2022年那次亏损，我复盘时发现：大多数亏损不是因为策略不对，而是因为我没有按照策略执行。</p>
+<ul>
+<li>信号出现了，但我觉得"现在点位不好"，没有入场 → 错过了一次盈利</li>
+<li>止损位触发了，但我觉得"马上就能回来"，没有执行 → 亏损扩大了</li>
+<li>仓位本该只开2手，但我"感觉这次把握很大"开了4手 → 亏损翻倍</li>
+</ul>
+<p>这些都是执行问题，不是策略问题。</p>
+<p>复盘的目的是找到这些偏差，然后把它们系统化地消除。</p>
+<p>我现在每周做一次复盘，用一个简单的表格记录：</p>
+<p>| 交易 | 计划入场 | 实际入场 | 计划止损 | 实际止损 | 偏差原因 |</p>
+<p>|------|---------|---------|---------|---------|---------|</p>
+<p>每次有偏差，就找原因。连续出现的原因，就想办法在系统层面解决——比如用程序化交易来消除"主观干预"这个偏差。</p>
+<hr>
+<h2>程序化的价值不只是速度</h2>
+<p>很多人觉得程序化交易的优势是速度快，人反应不过来。</p>
+<p>这当然是一个优势，但对我来说，更大的优势是：<strong>程序化会严格执行策略，不受情绪影响。</strong></p>
+<p>人在盈利时会贪，在亏损时会急。程序不会。</p>
+<p>当我的程序发出止损信号时，它会立刻执行，不会"再等一下看看"。当开仓条件满足时，它会按照计划开固定手数，不会因为"感觉把握大"就多开。</p>
+<p>这是程序化给我带来的最大价值——<strong>用代码来对抗情绪</strong>。</p>
+<hr>
+<h2>写给刚入坑的朋友</h2>
+<p>如果你刚开始做期货，我有几句话想说：</p>
+<p><strong>先用模拟账户做满三个月。</strong>不是走过场，是认真记录每一笔，做复盘。看自己的策略在不同市场环境下表现如何。</p>
+<p><strong>资金管理先于一切。</strong>在你还没有稳定盈利之前，每笔交易的风险比例保持在1%以内。</p>
+<p><strong>学会接受亏损。</strong>期货里没有只赚不亏的策略。你要学会的不是"不亏"，而是"控制亏损在合理范围内"。</p>
+<p><strong>别急着赚大钱。</strong>大多数人亏损，是因为太急了。</p>
+<hr>
+<p>说这些，不是要打击你。是因为我走过那条弯路，希望你少走一点。</p>
+<hr>
+<p><em>作者：虾仔 | 期货实盘记录与反思 | 欢迎公众号留言</em></p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
