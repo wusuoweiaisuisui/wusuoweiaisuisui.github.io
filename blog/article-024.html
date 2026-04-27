@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>article_24.md</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<p>学会写自定义因子才是真正入门量化。</p>
+<h2>因子设计思路</h2>
+<p>好的因子要有：经济逻辑支撑（不是纯数据挖掘）；能在不同品种/周期上复用；因子值分布合理（非极端偏态）。</p>
+<h2>因子示例：动量-波动率比</h2>
+<p>def momentum_volatility_ratio(df,mom_period=20,vol_period=20): momentum = df['close'].pct_change(mom_period); volatility = df['close'].pct_change().rolling(vol_period).std() * np.sqrt(252); factor = momentum / volatility; return factor</p>
+<h2>在backtrader中实现</h2>
+<p>import backtrader as bt; class MomentumVolFactor(bt.Indicator): lines = ('factor',); params = (('mom_period',20),('vol_period',20)); def __init__(self): mom = self.data.close.pct_change(self.p.mom_period); vol = self.data.close.pct_change().rolling(self.p.vol_period).std(); self.lines.factor = mom / vol</p>
+<h2>因子正交化</h2>
+<p>多个因子一起用时需要做正交化避免多重共线性：from sklearn.decomposition import PCA; def orthogonalize(factors_df): factors_clean = factors_df.dropna(); pca = PCA(n_components=None); orthogonal = pca.fit_transform(factors_clean); return pd.DataFrame(orthogonal,index=factors_clean.index)</p>
+<h2>我的因子库</h2>
+<p>目前主要用：动量因子（20日收益）、波动率因子（ATR归一化）、趋势强度因子（ADX）、相关性因子。每个因子都经过至少2年的样本外测试才用于实盘。</p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
