@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的钉钉交易通知系统：从零搭建到实盘使用</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+        h1 { color: #333; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; }
+        h2 { color: #555; margin-top: 30px; }
+        h3 { color: #666; margin-top: 25px; }
+        p { color: #444; margin: 15px 0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        blockquote { border-left: 4px solid #e74c3c; margin: 20px 0; padding: 10px 20px; background: #f9f9f9; }
+        ul { color: #444; }
+        li { margin: 8px 0; }
+        .back-link { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; }
+        .back-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+<h1>我的钉钉交易通知系统：从零搭建到实盘使用</h1>
+<p>程序化交易跑起来之后，人不可能一直盯着屏幕。开仓了、平仓了、止损触发了——这些事情必须第一时间推送到手机。</p>
+<p>我试过微信、Telegram、邮件，最后选定了钉钉机器人。原因很简单：国内服务器访问稳定，延迟低，而且钉钉群聊的markdown格式支持得比微信好。</p>
+<hr>
+<hr>
+<p><div class="ad-banner" style="background:#f5f5f5;border:2px dashed #ccc;padding:20px;text-align:center;margin:20px 0;color:#999;font-size:14px;"></p>
+<p>  <p style="margin:0;">📢 <strong>广告位</strong> | 量化策略代写 · 期货数据接口 · 策略代运维<br></p>
+<p>  联系方式：微信 xiazai-tech | <a href="https://wusuoweiaisuisui.github.io">官网</a></p></p>
+<p></div></p>
+<h2>钉钉机器人配置</h2>
+<p><strong>第一步：创建群 + 添加机器人</strong></p>
+<p>1. 钉钉新建一个内部群（可以只有自己）</p>
+<p>2. 群设置 → 机器人 → 添加机器人 → 自定义</p>
+<p>3. 安全设置选"加签"或"关键词"（我用关键词，设置"交易"）</p>
+<p>4. 复制webhook地址</p>
+<p><strong>第二步：测试推送</strong></p>
+<pre><code class="language-python">
+import requests
+import json
+
+webhook = "https://oapi.dingtalk.com/robot/send?access_token=你的token"
+
+def send_dingtalk(title, content):
+    headers = {"Content-Type": "application/json"}
+    data = {
+        "msgtype": "markdown",
+        "markdown": {
+            "title": title,
+            "text": f"## {title}\n\n{content}"
+        }
+    }
+    resp = requests.post(webhook, headers=headers, data=json.dumps(data))
+    return resp.json()
+
+# 测试
+result = send_dingtalk("交易测试", "如果收到这条消息，说明配置成功")
+print(result)
+</code></pre>
+<p>如果返回 <code>{'errcode': 0, 'errmsg': 'ok'}</code>，配置成功。</p>
+<p><strong>注意关键词限制</strong>：消息里必须包含你设置的关键词，否则钉钉会拒绝。我设的"交易"，所以每条推送消息里都要带"交易"两个字。</p>
+<hr>
+<h2>期货交易推送模板</h2>
+<pre><code class="language-python">
+def push_trade_signal(strategy, instrument, action, direction, detail_msg):
+    """
+    strategy: 策略名称
+    instrument: 品种名称  
+    action: 开仓/平仓/止损
+    direction: 正套/反套/做多/做空
+    detail_msg: 详细信息
+    """
+    title = f"交易信号 | {strategy}"
+    
+    # 动作图标
+    icons = {"开仓": "🟢", "平仓": "🔵", "止损": "🔴", "止盈": "⚪"}
+    icon = icons.get(action, "📊")
+    
+    text = f"""## {icon} {strategy} - {action}
+
+**品种**: {instrument}
+**操作**: {direction} | {action}
+
+{detail_msg}
+
+---
+*{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*"""
+    
+    return send_dingtalk(title, text)
+</code></pre>
+<hr>
+<h2>开仓通知示例</h2>
+<pre><code class="language-python">
+from datetime import datetime
+
+# 开仓时调用
+push_trade_signal(
+    strategy="套利策略v3.0",
+    instrument="HC/RB",
+    action="开仓",
+    direction="反套",
+    detail_msg="""▸ 买: RB2510 @3420.0
+▸ 卖: HC2510 @3580.0
+▸ 价差: 160.0 | Z=+2.31
+▸ 数量: 1手"""
+)
+</code></pre>
+<p>钉钉收到的效果：</p>
+<pre><code class="language-">
+🟢 套利策略v3.0 - 开仓
+
+品种: HC/RB
+操作: 反套 | 开仓
+
+▸ 买: RB2510 @3420.0
+▸ 卖: HC2510 @3580.0
+▸ 价差: 160.0 | Z=+2.31
+▸ 数量: 1手
+</code></pre>
+<p>清晰，信息完整，手机通知来了一眼就能判断情况。</p>
+<hr>
+<h2>容错处理</h2>
+<p>网络不稳定时，推送可能失败。加上重试和异常捕获：</p>
+<pre><code class="language-python">
+import time
+
+def push_safe(title, content, max_retry=3):
+    for i in range(max_retry):
+        try:
+            result = send_dingtalk(title, content)
+            if result.get("errcode") == 0:
+                return True
+            print(f"推送返回错误: {result}")
+        except Exception as e:
+            print(f"推送失败({i+1}/{max_retry}): {e}")
+        time.sleep(2)
+    
+    # 推送失败也不能让主程序崩溃
+    print(f"WARNING: 推送最终失败，消息: {title}")
+    return False
+</code></pre>
+<p>这里有个重要原则：<strong>推送失败不能让主交易程序崩溃</strong>。所有推送调用都放在try-except里。</p>
+<hr>
+<h2>一个真实的踩坑</h2>
+<p>我有一段时间出现了"重复推送"的问题——同一笔交易收到了两三条相同的通知。</p>
+<p>排查了半天，原因是：服务器重启后，旧的Python进程没有退出，新进程也启动了，两个进程同时在跑，同时收到信号，同时推送。</p>
+<p>解决方案：<strong>启动前先kill旧进程</strong></p>
+<pre><code class="language-python">
+# 在启动脚本里加上这段
+import os
+import subprocess
+
+def kill_existing():
+    result = subprocess.run(
+        ["tasklist", "/FI", "IMAGENAME eq python.exe"],
+        capture_output=True, text=True
+    )
+    current_pid = str(os.getpid())
+    for line in result.stdout.split("\n"):
+        if "python.exe" in line:
+            pid = line.split()[1]
+            if pid != current_pid:
+                print(f"杀掉旧进程 PID: {pid}")
+                subprocess.run(["taskkill", "/F", "/PID", pid])
+</code></pre>
+<hr>
+<h2>推送内容的设计原则</h2>
+<p>做了几年交易通知系统，总结了几个原则：</p>
+<p><strong>1. 通知里写清楚"买什么卖什么"，不要只写方向</strong></p>
+<p>"开多1手" → 信息不足</p>
+<p>"买HC2510 @3420 卖RB2510 @3580" → 清楚，核验方便</p>
+<p><strong>2. 包含Z-score或信号值</strong></p>
+<p>方便事后复盘时核对当时的进场条件是否合理。</p>
+<p><strong>3. 止损通知要突出</strong></p>
+<p>止损和开仓的图标要明显区分，止损是🔴，开仓是🟢，一眼就能看出。</p>
+<p><strong>4. 每天收盘后发一条日报</strong></p>
+<p>汇总当天的开平仓记录、当前持仓、浮盈浮亏。我的日报每天17:00自动推送。</p>
+<hr>
+<h2>扩展：也可以接微信</h2>
+<p>如果不用钉钉，也可以用微信的Server酱（免费，有推送次数限制）或者Bark（iOS）。原理一样，换一下接口地址即可。</p>
+<p>但如果你在国内服务器上跑策略，钉钉是最稳定的选择。</p>
+<hr>
+<p><em>作者：虾仔 | 量化系统工程实践 | 欢迎留言交流</em></p>
+<p><div class="ad-footer" style="background:#1a1a2e;color:#fff;border-radius:8px;padding:20px;text-align:center;margin-top:40px;"></p>
+<p>  <h4 style="margin:0 0 10px 0;">🚀 量化策略定制服务</h4></p>
+<p>  <p style="margin:0;font-size:13px;">Python策略开发 · TqSdk对接 · Backtrader回测优化<br>微信：xiazai-tech | 备注：量化</p></p>
+<p></div></p>
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+</html>
