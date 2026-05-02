@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Strategy Monitor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .header h1 { font-size: 32px; color: #333; margin-bottom: 10px; }
+        .header p { color: #666; font-size: 14px; }
+        .status-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .status-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        .status-card h3 { font-size: 14px; opacity: 0.9; margin-bottom: 8px; }
+        .status-card .value { font-size: 28px; font-weight: bold; }
+        .status-card.positive { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .status-card.negative { background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%); }
+        .main-content { display: grid; grid-template-columns: 1fr 350px; gap: 20px; }
+        @media (max-width: 900px) { .main-content { grid-template-columns: 1fr; } }
+        .panel {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .panel h2 { font-size: 20px; color: #333; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #eee; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; color: #666; }
+        tr:hover { background: #f8f9fa; }
+        .signal {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .signal-watch { background: #e9ecef; color: #495057; }
+        .signal-long { background: #d4edda; color: #155724; }
+        .signal-short { background: #f8d7da; color: #721c24; }
+        .pnl-positive { color: #28a745; font-weight: bold; }
+        .pnl-negative { color: #dc3545; font-weight: bold; }
+        .loading { text-align: center; padding: 40px; color: #999; }
+        .api-config {
+            background: #fff3cd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .api-config label { font-weight: bold; display: block; margin-bottom: 8px; }
+        .api-config input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .api-config button {
+            margin-top: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .api-config button:hover { background: #5568d3; }
+        .nav-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .nav-link:hover { background: #5568d3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="nav-link">← Back to Home</a>
+            <h1>Trading Strategy Monitor</h1>
+            <p id="connection-status">Initializing...</p>
+            <div class="status-bar">
+                <div class="status-card">
+                    <h3>Account Balance</h3>
+                    <div class="value" id="balance">$0</div>
+                </div>
+                <div class="status-card" id="today-pnl-card">
+                    <h3>Today's P&L</h3>
+                    <div class="value" id="today-pnl">$0</div>
+                </div>
+                <div class="status-card positive">
+                    <h3>Closed P&L</h3>
+                    <div class="value" id="closed-pnl">$0</div>
+                </div>
+                <div class="status-card">
+                    <h3>Positions</h3>
+                    <div class="value" id="total-pos">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="api-config">
+                <label>API Server URL:</label>
+                <input type="text" id="api-url" placeholder="http://YOUR_SERVER_IP:8000/api">
+                <button onclick="saveApiUrl()">Save & Connect</button>
+                <p style="font-size: 12px; color: #666; margin-top: 8px;">
+                    Default: http://localhost:8000/api (for local testing)<br>
+                    For remote access: Use your server's public IP
+                </p>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="panel">
+                <h2>Positions & Signals</h2>
+                <div id="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Price</th>
+                                <th>Position</th>
+                                <th>P&L</th>
+                                <th>Signal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-table">
+                            <tr><td colspan="5" class="loading">Enter API URL above and click Save</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Strategy Config</h2>
+                <div id="portfolio-info" class="loading">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_STORAGE = 'strategy_api_url';
+
+        function formatMoney(value) {
+            return '$' + (value || 0).toLocaleString();
+        }
+
+        function getPnlClass(pnl) {
+            if (pnl > 0) return 'pnl-positive';
+            if (pnl < 0) return 'pnl-negative';
+            return '';
+        }
+
+        function getSignalClass(signal) {
+            if (signal && signal.includes('Long')) return 'signal-long';
+            if (signal && signal.includes('Short')) return 'signal-short';
+            return 'signal-watch';
+        }
+
+        function saveApiUrl() {
+            const url = document.getElementById('api-url').value.trim();
+            if (url) {
+                localStorage.setItem(API_BASE_STORAGE, url);
+                refreshData();
+            }
+        }
+
+        function getApiUrl() {
+            return localStorage.getItem(API_BASE_STORAGE) || 'http://localhost:8000/api';
+        }
+
+        async function refreshData() {
+            const apiBase = getApiUrl();
+            try {
+                const statusRes = await fetch(`${apiBase}/status`);
+                const statusData = await statusRes.json();
+
+                if (statusData.success) {
+                    updateStatusDisplay(statusData.data);
+                    document.getElementById('connection-status').textContent = statusData.data.status || 'Connected';
+                }
+
+                const posRes = await fetch(`${apiBase}/positions`);
+                const posData = await posRes.json();
+
+                if (posData.success) {
+                    updatePositionsTable(posData.data);
+                    document.getElementById('total-pos').textContent = posData.total_pos;
+                }
+
+                const portfolioRes = await fetch(`${apiBase}/portfolio`);
+                const portfolioData = await portfolioRes.json();
+
+                if (portfolioData.success) {
+                    updatePortfolioInfo(portfolioData.data);
+                }
+            } catch (error) {
+                console.error('Refresh failed:', error);
+                document.getElementById('connection-status').textContent = 'Connection failed - check API URL';
+                document.getElementById('connection-status').style.color = '#dc3545';
+            }
+        }
+
+        function updateStatusDisplay(data) {
+            document.getElementById('balance').textContent = formatMoney(data.balance);
+            document.getElementById('today-pnl').textContent = formatMoney(data.today_pnl);
+            document.getElementById('closed-pnl').textContent = formatMoney(data.closed_pnl);
+
+            const todayPnlCard = document.getElementById('today-pnl-card');
+            if (data.today_pnl > 0) {
+                todayPnlCard.className = 'status-card positive';
+            } else if (data.today_pnl < 0) {
+                todayPnlCard.className = 'status-card negative';
+            }
+        }
+
+        function updatePositionsTable(positions) {
+            const tbody = document.getElementById('data-table');
+
+            if (positions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="loading">No positions</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = positions.map(pos => `
+                <tr>
+                    <td>${pos.name}</td>
+                    <td>${pos.price.toFixed(2)}</td>
+                    <td>${pos.position}</td>
+                    <td class="${getPnlClass(pos.pnl)}">${formatMoney(pos.pnl)}</td>
+                    <td><span class="signal ${getSignalClass(pos.signal)}">${pos.signal}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function updatePortfolioInfo(portfolio) {
+            const container = document.getElementById('portfolio-info');
+            container.innerHTML = portfolio.map(item => `
+                <div style="padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px;">
+                    <strong>${item.name}</strong>
+                    <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                        MA Short: ${item.ma_short} | MA Long: ${item.ma_long}<br>
+                        Stop Loss: ${(item.stop_loss * 100).toFixed(1)}% | Take Profit: ${(item.take_profit * 100).toFixed(1)}%<br>
+                        Resonance Threshold: ${item.resonance_threshold}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.onload = function() {
+            const savedUrl = localStorage.getItem(API_BASE_STORAGE);
+            if (savedUrl) {
+                document.getElementById('api-url').value = savedUrl;
+            }
+            refreshData();
+            setInterval(refreshData, 3000);
+        };
+    </script>
+</body>
+</html>
