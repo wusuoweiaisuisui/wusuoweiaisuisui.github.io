@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虾仔科技 - 用户中心</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .nav { background: rgba(255,255,255,0.95); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .nav a { color: #333; text-decoration: none; font-weight: 600; padding: 8px 16px; border-radius: 6px; transition: all 0.3s; }
+        .nav a:hover { background: #667eea; color: white; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: flex; gap: 30px; }
+        .sidebar { width: 250px; background: white; border-radius: 16px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); height: fit-content; }
+        .sidebar h3 { color: #333; margin-bottom: 20px; font-size: 18px; }
+        .menu-item { padding: 12px 15px; margin: 5px 0; border-radius: 8px; cursor: pointer; transition: all 0.3s; color: #555; }
+        .menu-item:hover, .menu-item.active { background: #667eea; color: white; }
+        .content { flex: 1; background: white; border-radius: 16px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .section { display: none; }
+        .section.active { display: block; }
+        h2 { color: #333; margin-bottom: 25px; font-size: 24px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #555; font-weight: 600; }
+        input { width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 15px; transition: all 0.3s; }
+        input:focus { border-color: #667eea; outline: none; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+        .btn { padding: 12px 30px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(102,126,234,0.4); }
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .card { background: #f8f9fa; border-radius: 12px; padding: 25px; margin-bottom: 20px; }
+        .card h4 { color: #333; margin-bottom: 15px; font-size: 18px; }
+        .stat { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
+        .stat:last-child { border-bottom: none; }
+        .stat-value { font-weight: 700; color: #667eea; font-size: 20px; }
+        .api-key { background: #2d3436; color: #00ff00; padding: 15px; border-radius: 8px; font-family: monospace; word-break: break-all; margin-top: 10px; }
+        .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .price-card { border: 2px solid #e0e0e0; border-radius: 12px; padding: 25px; text-align: center; transition: all 0.3s; cursor: pointer; }
+        .price-card:hover { border-color: #667eea; transform: translateY(-5px); box-shadow: 0 10px 30px rgba(102,126,234,0.2); }
+        .price-card h3 { font-size: 28px; margin: 10px 0; color: #667eea; }
+        .price-card p { color: #666; margin-bottom: 20px; }
+        .status-indicator { display: inline-block; width: 10px; height: 10px; background: #27ae60; border-radius: 50%; margin-right: 8px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .status-text { color: #27ae60; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div style="font-size: 20px; font-weight: 800; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">虾仔科技</div>
+        <div style="display: flex; gap: 15px;">
+            <a href="index.html">首页</a>
+            <a href="token-relay.html">Token中转</a>
+            <a href="overseas-shipping.html">海外一件代发</a>
+            <a href="user-center-http.html" style="background: #667eea; color: white;">用户中心</a>
+            <a href="admin.html">管理后台</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="sidebar">
+            <h3>控制台</h3>
+            <div class="menu-item active" data-section="dashboard">📊 仪表盘</div>
+            <div class="menu-item" data-section="register">📝 注册账号</div>
+            <div class="menu-item" data-section="login">🔐 登录</div>
+            <div class="menu-item" data-section="apikey">🔑 API密钥</div>
+            <div class="menu-item" data-section="recharge">💳 充值中心</div>
+        </div>
+
+        <div class="content">
+            <div id="dashboard" class="section active">
+                <h2>欢迎来到用户中心</h2>
+                <div class="card">
+                    <h4><span class="status-indicator"></span><span class="status-text" id="server-status">服务器状态检查中...</span></h4>
+                </div>
+                <div id="dashboard-content" style="display: none;">
+                    <div class="card">
+                        <h4>账户信息</h4>
+                        <div class="stat">
+                            <span>用户名</span>
+                            <span class="stat-value" id="dash-username">-</span>
+                        </div>
+                        <div class="stat">
+                            <span>邮箱</span>
+                            <span class="stat-value" id="dash-email">-</span>
+                        </div>
+                        <div class="stat">
+                            <span>余额</span>
+                            <span class="stat-value" id="dash-balance">¥0</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>API密钥</h4>
+                        <div class="api-key" id="dash-apikey">请先登录</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="register" class="section">
+                <h2>注册新账号</h2>
+                <div id="register-alert"></div>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" id="reg-username" required placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label>邮箱</label>
+                        <input type="email" id="reg-email" required placeholder="请输入邮箱">
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input type="password" id="reg-password" required placeholder="请输入密码">
+                    </div>
+                    <button type="submit" class="btn btn-primary">立即注册</button>
+                </form>
+            </div>
+
+            <div id="login" class="section">
+                <h2>登录</h2>
+                <div id="login-alert"></div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" id="login-username" required placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input type="password" id="login-password" required placeholder="请输入密码">
+                    </div>
+                    <button type="submit" class="btn btn-primary">登录</button>
+                </form>
+            </div>
+
+            <div id="apikey" class="section">
+                <h2>API密钥管理</h2>
+                <div class="card">
+                    <h4>您的API密钥</h4>
+                    <div class="api-key" id="apikey-display">请先登录</div>
+                    <p style="margin-top: 15px; color: #666;">请妥善保管您的API密钥，不要分享给他人。</p>
+                </div>
+            </div>
+
+            <div id="recharge" class="section">
+                <h2>充值中心</h2>
+                <div class="price-grid">
+                    <div class="price-card" data-amount="99">
+                        <h4>体验版</h4>
+                        <h3>¥99</h3>
+                        <p>1,000次API调用</p>
+                        <button class="btn btn-primary" onclick="recharge(99)">立即购买</button>
+                    </div>
+                    <div class="price-card" data-amount="499">
+                        <h4>专业版</h4>
+                        <h3>¥499</h3>
+                        <p>10,000次API调用</p>
+                        <button class="btn btn-primary" onclick="recharge(499)">立即购买</button>
+                    </div>
+                    <div class="price-card" data-amount="1999">
+                        <h4>企业版</h4>
+                        <h3>¥1,999</h3>
+                        <p>50,000次API调用</p>
+                        <button class="btn btn-primary" onclick="recharge(1999)">立即购买</button>
+                    </div>
+                </div>
+                <div id="recharge-alert" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = "http://49.232.79.54:8081";
+        let currentUser = null;
+
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(item.dataset.section).classList.add('active');
+            });
+        });
+
+        async function checkServer() {
+            try {
+                const res = await fetch(`${API_BASE}/`);
+                if (res.ok) {
+                    document.getElementById('server-status').textContent = '服务器已连接';
+                } else {
+                    document.getElementById('server-status').textContent = '服务器连接失败';
+                }
+            } catch {
+                document.getElementById('server-status').textContent = '连接服务器失败，请确保服务器已启动';
+            }
+        }
+
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    document.getElementById('register-alert').innerHTML = '<div class="alert alert-success">注册成功！请去登录。</div>';
+                    currentUser = data.user;
+                    updateDashboard();
+                } else {
+                    document.getElementById('register-alert').innerHTML = `<div class="alert alert-error">${data.error || '注册失败'}</div>`;
+                }
+            } catch (err) {
+                document.getElementById('register-alert').innerHTML = '<div class="alert alert-error">连接服务器失败，请确保服务器已启动</div>';
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    document.getElementById('login-alert').innerHTML = '<div class="alert alert-success">登录成功！</div>';
+                    currentUser = data.user;
+                    updateDashboard();
+                } else {
+                    document.getElementById('login-alert').innerHTML = `<div class="alert alert-error">${data.error || '登录失败'}</div>`;
+                }
+            } catch (err) {
+                document.getElementById('login-alert').innerHTML = '<div class="alert alert-error">连接服务器失败，请确保服务器已启动</div>';
+            }
+        });
+
+        async function recharge(amount) {
+            if (!currentUser) {
+                document.getElementById('recharge-alert').innerHTML = '<div class="alert alert-error">请先登录</div>';
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/api/recharge`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: currentUser.id, amount })
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    document.getElementById('recharge-alert').innerHTML = `<div class="alert alert-success">充值成功！新余额：¥${data.new_balance}</div>`;
+                    currentUser.balance = data.new_balance;
+                    updateDashboard();
+                } else {
+                    document.getElementById('recharge-alert').innerHTML = `<div class="alert alert-error">${data.error || '充值失败'}</div>`;
+                }
+            } catch (err) {
+                document.getElementById('recharge-alert').innerHTML = '<div class="alert alert-error">连接服务器失败，请确保服务器已启动</div>';
+            }
+        }
+
+        function updateDashboard() {
+            if (currentUser) {
+                document.getElementById('dashboard-content').style.display = 'block';
+                document.getElementById('dash-username').textContent = currentUser.username;
+                document.getElementById('dash-email').textContent = currentUser.email;
+                document.getElementById('dash-balance').textContent = `¥${currentUser.balance}`;
+                document.getElementById('dash-apikey').textContent = currentUser.api_key;
+                document.getElementById('apikey-display').textContent = currentUser.api_key;
+            }
+        }
+
+        checkServer();
+    </script>
+</body>
+</html>
