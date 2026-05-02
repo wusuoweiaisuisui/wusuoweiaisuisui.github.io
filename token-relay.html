@@ -3,138 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Token中转服务 - 虾仔科技</title>
+    <title>AI Token中转服务 - 虾仔科技</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .nav {
-            background: rgba(255,255,255,0.95);
+            background: white;
             padding: 15px 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         .nav-logo { font-size: 24px; font-weight: bold; color: #667eea; }
-        .nav-links { display: flex; gap: 25px; }
+        .nav-links { display: flex; gap: 20px; flex-wrap: wrap; }
         .nav-links a {
             color: #333;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
         }
-        .nav-links a:hover { color: #667eea; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .nav-links a:hover { background: #667eea; color: white; }
         .hero {
             background: white;
             border-radius: 20px;
             padding: 60px 40px;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            margin-bottom: 40px;
-        }
-        .hero h1 {
-            font-size: 42px;
-            color: #333;
-            margin-bottom: 15px;
-        }
-        .hero p {
-            font-size: 18px;
-            color: #666;
             margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
+        .hero h1 { font-size: 42px; color: #333; margin-bottom: 15px; }
+        .hero p { font-size: 20px; color: #666; margin-bottom: 25px; }
         .hero-badge {
             display: inline-block;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 8px 20px;
+            padding: 10px 25px;
             border-radius: 30px;
             font-weight: bold;
             margin-bottom: 20px;
         }
-        .btn-primary {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 40px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-            transition: transform 0.3s, box-shadow 0.3s;
+        .code-demo {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px auto;
+            max-width: 700px;
+            text-align: left;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            color: #d4d4d4;
+            overflow-x: auto;
         }
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        .code-demo .comment { color: #6a9955; }
+        .code-demo .keyword { color: #569cd6; }
+        .code-demo .string { color: #ce9178; }
+        .code-demo .function { color: #dcdcaa; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
+        .stat {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        .stat-number { font-size: 36px; font-weight: bold; color: #667eea; }
+        .stat-label { font-size: 14px; color: #666; margin-top: 8px; }
         .features {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .features h2 { color: #333; margin-bottom: 40px; text-align: center; font-size: 28px; }
+        .feature-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            gap: 30px;
         }
-        .feature-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            transition: transform 0.3s;
+        .feature {
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 16px;
+            border-left: 4px solid #667eea;
         }
-        .feature-card:hover { transform: translateY(-5px); }
-        .feature-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-        .feature-card h3 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .feature-card p {
-            color: #666;
-            line-height: 1.6;
-        }
+        .feature h4 { color: #333; margin-bottom: 12px; font-size: 18px; }
+        .feature p { color: #666; line-height: 1.6; }
+        .feature-icon { font-size: 36px; margin-bottom: 15px; }
         .pricing {
             background: white;
             border-radius: 20px;
-            padding: 50px 40px;
+            padding: 50px;
+            margin-bottom: 30px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            margin-bottom: 40px;
         }
-        .pricing h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 40px;
-        }
+        .pricing h2 { color: #333; margin-bottom: 40px; text-align: center; }
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
+            max-width: 900px;
+            margin: 0 auto;
         }
         .price-card {
             border: 2px solid #eee;
-            border-radius: 15px;
-            padding: 30px;
+            border-radius: 16px;
+            padding: 35px;
             text-align: center;
             transition: all 0.3s;
         }
         .price-card:hover {
             border-color: #667eea;
-            transform: scale(1.02);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102,126,234,0.2);
         }
         .price-card.popular {
             border: 2px solid #667eea;
             position: relative;
+            background: linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%);
         }
         .price-card.popular::before {
             content: '最受欢迎';
@@ -149,246 +154,261 @@
             font-size: 12px;
             font-weight: bold;
         }
-        .price-title {
-            font-size: 22px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .price-amount {
-            font-size: 48px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 20px 0;
-        }
-        .price-amount span {
-            font-size: 16px;
-            color: #999;
-        }
-        .price-features {
-            list-style: none;
-            text-align: left;
-            margin: 20px 0;
-        }
-        .price-features li {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-            color: #666;
-        }
-        .price-features li::before {
-            content: '✓';
-            color: #28a745;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-        .how-it-works {
-            background: white;
-            border-radius: 20px;
-            padding: 50px 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            margin-bottom: 40px;
-        }
-        .how-it-works h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 40px;
-        }
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-        }
-        .step {
-            text-align: center;
-        }
-        .step-number {
-            width: 50px;
-            height: 50px;
+        .price-title { font-size: 22px; font-weight: bold; color: #333; margin-bottom: 15px; }
+        .price-amount { font-size: 48px; font-weight: bold; color: #667eea; margin: 20px 0; }
+        .price-amount span { font-size: 16px; color: #999; font-weight: normal; }
+        .price-features { list-style: none; text-align: left; margin: 20px 0; }
+        .price-features li { padding: 10px 0; border-bottom: 1px solid #eee; color: #666; }
+        .price-features li::before { content: '✓ '; color: #28a745; font-weight: bold; margin-right: 8px; }
+        .btn {
+            display: inline-block;
+            padding: 14px 35px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
+            border: none;
+            border-radius: 8px;
             font-weight: bold;
-            margin: 0 auto 15px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
         }
-        .step h3 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .step p {
-            color: #666;
-            line-height: 1.6;
-        }
-        .contact-section {
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(102,126,234,0.4); }
+        .api-demo {
             background: white;
             border-radius: 20px;
-            padding: 50px 40px;
+            padding: 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .api-demo h2 { color: #333; margin-bottom: 30px; text-align: center; }
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .demo-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        .demo-card h4 { color: #333; margin-bottom: 15px; }
+        .demo-card pre {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #d4d4d4;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        .contact {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
             text-align: center;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
-        .contact-section h2 {
-            color: #333;
-            margin-bottom: 20px;
+        .contact h2 { color: #333; margin-bottom: 20px; }
+        .contact p { color: #666; margin-bottom: 30px; font-size: 16px; }
+        .contact-methods {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
         }
-        .contact-section p {
-            color: #666;
-            margin-bottom: 30px;
-        }
+        .contact-item { text-align: center; }
+        .contact-item .icon { font-size: 36px; margin-bottom: 10px; }
+        .contact-item p { color: #333; font-weight: bold; }
         .footer {
             text-align: center;
             color: white;
             padding: 30px;
-            margin-top: 40px;
+            margin-top: 30px;
         }
+        .footer a { color: white; text-decoration: underline; }
         @media (max-width: 768px) {
-            .hero h1 { font-size: 32px; }
+            .hero h1 { font-size: 28px; }
             .nav-links { display: none; }
+            .price-amount { font-size: 36px; }
         }
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <div class="nav-container">
-            <div class="nav-logo">🦐 虾仔科技</div>
-            <div class="nav-links">
-                <a href="index.html">首页</a>
-                <a href="strategy-monitor.html">策略监控</a>
-                <a href="blog/">博客</a>
-                <a href="token-relay.html">Token中转</a>
-                <a href="overseas-shipping.html">海外一件代发</a>
-                <a href="index.html#contact">联系我们</a>
-            </div>
-        </div>
-    </nav>
-
     <div class="container">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="nav-logo">🦐 虾仔科技</div>
+                <div class="nav-links">
+                    <a href="index.html">首页</a>
+                    <a href="http://49.232.79.54:5000/">策略监控</a>
+                    <a href="blog/">博客</a>
+                    <a href="token-relay.html">Token中转</a>
+                    <a href="overseas-shipping.html">海外一件代发</a>
+                </div>
+            </div>
+        </nav>
+
         <div class="hero">
-            <div class="hero-badge">⚡ 极速中转服务</div>
-            <h1>Token中转服务</h1>
-            <p>稳定、安全、高效的API Token中转服务，支持多种主流API平台</p>
-            <a href="#pricing" class="btn-primary">立即开始</a>
+            <div class="hero-badge">⚡ AI API 中转服务</div>
+            <h1>安全、稳定、高效的 Token 中转服务</h1>
+            <p>支持 OpenAI、Claude、DeepSeek 等主流AI平台<br>稳定连接全球，畅享AI能力</p>
+            <a href="http://49.232.79.54:8080/" class="btn" target="_blank">立即使用</a>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">99.9%</div>
+                <div class="stat-label">服务可用性</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">&lt;50ms</div>
+                <div class="stat-label">平均响应延迟</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">90+</div>
+                <div class="stat-label">支持的AI平台</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">7x24</div>
+                <div class="stat-label">技术支持</div>
+            </div>
         </div>
 
         <div class="features">
-            <div class="feature-card">
-                <div class="feature-icon">🔒</div>
-                <h3>安全加密</h3>
-                <p>采用AES-256加密算法，保护您的Token安全，所有数据传输加密</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>极速响应</h3>
-                <p>全球CDN节点加速，毫秒级响应时间，稳定可靠的服务体验</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🛡️</div>
-                <h3>高可用性</h3>
-                <p>99.9%服务可用性承诺，多节点容灾备份，确保服务稳定运行</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>用量统计</h3>
-                <p>实时监控API使用量，详细的统计报表，方便成本控制</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔗</div>
-                <h3>多平台支持</h3>
-                <p>支持OpenAI、Claude、Midjourney等主流AI平台Token中转</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">💳</div>
-                <h3>灵活计费</h3>
-                <p>按量计费，无最低消费，透明的价格体系，降低使用成本</p>
+            <h2>为什么选择我们的中转服务？</h2>
+            <div class="feature-grid">
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h4>安全加密</h4>
+                    <p>API密钥加密存储，传输过程全程加密，保护您的数据安全</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h4>极速响应</h4>
+                    <p>多节点部署，智能路由选择，确保最低延迟和最高稳定性</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌐</div>
+                    <h4>多平台支持</h4>
+                    <p>支持OpenAI、Claude、DeepSeek、Gemini等90+AI平台</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h4>用量统计</h4>
+                    <p>实时监控API调用量，详细统计报表，方便成本控制</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">�</div>
+                    <h4>灵活计费</h4>
+                    <p>按量计费，无最低消费，透明的价格体系</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">�️</div>
+                    <h4>高可用性</h4>
+                    <p>多节点容灾备份，99.9%服务可用性保障</p>
+                </div>
             </div>
         </div>
 
-        <div class="pricing" id="pricing">
-            <h2>灵活的价格方案</h2>
+        <div class="pricing">
+            <h2>灵活的计费方案</h2>
             <div class="pricing-grid">
                 <div class="price-card">
                     <div class="price-title">基础版</div>
                     <div class="price-amount">¥99<span>/月</span></div>
                     <ul class="price-features">
-                        <li>100万次调用/月</li>
+                        <li>100万Token/月</li>
+                        <li>支持OpenAI API</li>
                         <li>标准响应速度</li>
-                        <li>Email支持</li>
-                        <li>单个平台支持</li>
+                        <li>Email技术支持</li>
                     </ul>
-                    <a href="#contact" class="btn-primary" style="display: block;">选择方案</a>
+                    <a href="#contact" class="btn">选择方案</a>
                 </div>
                 <div class="price-card popular">
                     <div class="price-title">专业版</div>
-                    <div class="price-amount">¥399<span>/月</span></div>
+                    <div class="price-amount">¥299<span>/月</span></div>
                     <ul class="price-features">
-                        <li>500万次调用/月</li>
-                        <li>优先响应队列</li>
-                        <li>7x24小时支持</li>
-                        <li>全部平台支持</li>
+                        <li>500万Token/月</li>
+                        <li>支持全部AI平台</li>
+                        <li>优先响应速度</li>
+                        <li>7x24技术支持</li>
                         <li>用量分析报表</li>
                     </ul>
-                    <a href="#contact" class="btn-primary" style="display: block;">选择方案</a>
+                    <a href="#contact" class="btn">选择方案</a>
                 </div>
                 <div class="price-card">
                     <div class="price-title">企业版</div>
-                    <div class="price-amount">面议</div>
+                    <div class="price-amount">定制</div>
                     <ul class="price-features">
-                        <li>无限次调用</li>
+                        <li>无限Token用量</li>
                         <li>专属服务器</li>
-                        <li>客户经理一对一</li>
-                        <li>定制化开发</li>
-                        <li>SLA保障</li>
+                        <li>私有化部署</li>
+                        <li>一对一客户经理</li>
+                        <li>SLA服务保障</li>
                     </ul>
-                    <a href="#contact" class="btn-primary" style="display: block;">联系我们</a>
+                    <a href="#contact" class="btn">联系我们</a>
                 </div>
             </div>
         </div>
 
-        <div class="how-it-works">
-            <h2>使用流程</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>注册账号</h3>
-                    <p>填写基本信息，完成账号注册</p>
+        <div class="api-demo">
+            <h2>快速接入</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h4>OpenAI API 调用示例</h4>
+                    <pre><code><span class="keyword">import</span> openai
+
+openai.api_base = <span class="string">"http://49.232.79.54:8080/v1"</span>
+openai.api_key = <span class="string">"your-api-key"</span>
+
+response = openai.ChatCompletion.create(
+    model=<span class="string">"gpt-3.5-turbo"</span>,
+    messages=[
+        {<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Hello!"</span>}
+    ]
+)
+<span class="function">print</span>(response.choices[0].message.content)</code></pre>
                 </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>选择套餐</h3>
-                    <p>根据需求选择适合的套餐方案</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>配置Token</h3>
-                    <p>在后台配置您的API Token</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>开始使用</h3>
-                    <p>获得中转地址，开始使用服务</p>
+                <div class="demo-card">
+                    <h4>cURL 调用示例</h4>
+                    <pre><code><span class="comment"># OpenAI</span>
+curl http://49.232.79.54:8080/v1/chat/completions \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -H <span class="string">"Authorization: Bearer YOUR-API-KEY"</span> \
+  -d <span class="string">'{"model":"gpt-3.5-turbo","messages":[{"role":"user","content":"Hello"}]}'</span>
+
+<span class="comment"># Claude (添加 X-Provider 头)</span>
+curl http://49.232.79.54:8080/v1/chat/completions \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -H <span class="string">"X-Provider: anthropic"</span> \
+  -H <span class="string">"Authorization: Bearer YOUR-API-KEY"</span> \
+  -d <span class="string">'{"model":"claude-3-sonnet","messages":[{"role":"user","content":"Hello"}]}'</span></code></pre>
                 </div>
             </div>
         </div>
 
-        <div class="contact-section" id="contact">
-            <h2>获取更多信息</h2>
-            <p>有任何问题或需求，欢迎随时联系我们的专业团队</p>
-            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-                <div style="text-align: center;">
-                    <div style="font-size: 36px;">📧</div>
-                    <p>xiazi-claw@coze.email</p>
+        <div class="contact" id="contact">
+            <h2>开始使用</h2>
+            <p>联系我们获取API密钥和技术支持</p>
+            <div class="contact-methods">
+                <div class="contact-item">
+                    <div class="icon">📧</div>
+                    <p>api@xiazi-tech.com</p>
                 </div>
-                <div style="text-align: center;">
-                    <div style="font-size: 36px;">💬</div>
+                <div class="contact-item">
+                    <div class="icon">💬</div>
                     <p>微信：虾仔科技</p>
+                </div>
+                <div class="contact-item">
+                    <div class="icon">🕐</div>
+                    <p>服务时间：7x24</p>
                 </div>
             </div>
         </div>
 
         <div class="footer">
-            <p>© 2026 虾仔科技有限公司 版权所有</p>
+            <p>© 2026 虾仔科技有限公司 | <a href="index.html">返回首页</a></p>
         </div>
     </div>
 </body>
