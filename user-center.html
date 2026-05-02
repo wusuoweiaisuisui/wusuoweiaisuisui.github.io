@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户中心 - 虾仔科技</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        .nav {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .nav-logo { font-size: 24px; font-weight: bold; color: #667eea; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .nav-links a:hover { background: #667eea; color: white; }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 25px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content { grid-template-columns: 1fr; }
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .sidebar h3 { color: #333; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #f0f0f0; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 10px; }
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 15px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+        
+        .panel h2 { color: #333; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #f0f0f0; }
+        
+        /* 表单样式 */
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .form-group input:focus { outline: none; border-color: #667eea; }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4); }
+        .btn-success { background: #10b981; }
+        .btn-danger { background: #ef4444; }
+        
+        /* 卡片样式 */
+        .card {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .card h4 { color: #333; margin-bottom: 15px; }
+        .card .value { font-size: 28px; font-weight: bold; color: #667eea; }
+        
+        /* API密钥显示 */
+        .api-key-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Monaco', monospace;
+            font-size: 14px;
+            word-break: break-all;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .api-key-box .copy-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        /* 充值选项 */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .pricing-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .pricing-card:hover { border-color: #667eea; }
+        .pricing-card.featured {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+        .pricing-card h4 { color: #333; margin-bottom: 10px; }
+        .pricing-card .price { font-size: 32px; font-weight: bold; color: #667eea; }
+        .pricing-card .unit { font-size: 14px; color: #666; }
+        .pricing-card .desc { font-size: 14px; color: #666; margin-top: 10px; }
+        
+        /* 通知消息 */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .alert.success { background: #dcfce7; color: #166534; }
+        .alert.error { background: #fee2e2; color: #991b1b; }
+        
+        /* 表格 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th { background: #f8fafc; font-weight: 600; color: #333; }
+        td { color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="nav-logo">🦐 虾仔科技</div>
+                <div class="nav-links">
+                    <a href="index.html">首页</a>
+                    <a href="token-relay.html">Token中转</a>
+                    <a href="admin.html">管理后台</a>
+                    <a href="user-center.html">用户中心</a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <h3>用户菜单</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#dashboard" class="active">控制台</a></li>
+                    <li><a href="#register">注册账号</a></li>
+                    <li><a href="#api">API密钥</a></li>
+                    <li><a href="#recharge">充值中心</a></li>
+                    <li><a href="#usage">使用记录</a></li>
+                </ul>
+            </div>
+            
+            <div class="panel">
+                <!-- 控制台 -->
+                <div id="dashboard-section">
+                    <h2>📊 控制台</h2>
+                    <div class="card">
+                        <h4>账户余额</h4>
+                        <div class="value">¥ 0.00</div>
+                    </div>
+                    <div class="card">
+                        <h4>本月使用量</h4>
+                        <div class="value">0 次</div>
+                        <p style="color: #666; margin-top: 10px; font-size: 14px;">API调用次数</p>
+                    </div>
+                    <div class="card">
+                        <h4>API密钥</h4>
+                        <div class="api-key-box">
+                            sk-your-api-key-here-12345
+                            <button class="copy-btn" onclick="copyApiKey()">复制</button>
+                        </div>
+                        <button class="btn btn-success" onclick="generateNewKey()">🔑 生成新密钥</button>
+                    </div>
+                </div>
+                
+                <!-- 注册 -->
+                <div id="register-section" style="display: none;">
+                    <h2>📝 注册账号</h2>
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" id="reg-username" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label>邮箱</label>
+                        <input type="email" id="reg-email" placeholder="请输入邮箱">
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input type="password" id="reg-password" placeholder="请输入密码">
+                    </div>
+                    <div class="form-group">
+                        <label>确认密码</label>
+                        <input type="password" id="reg-password2" placeholder="请再次输入密码">
+                    </div>
+                    <button class="btn" onclick="register()">注册</button>
+                </div>
+                
+                <!-- API密钥 -->
+                <div id="api-section" style="display: none;">
+                    <h2>🔑 API密钥管理</h2>
+                    <div class="api-key-box">
+                        sk-your-api-key-here-12345
+                        <button class="copy-btn" onclick="copyApiKey()">复制</button>
+                    </div>
+                    <button class="btn" style="margin-right: 15px;" onclick="generateNewKey()">🔑 生成新密钥</button>
+                    <button class="btn btn-danger" onclick="revokeKey()">❌ 撤销密钥</button>
+                    
+                    <h3 style="margin-top: 30px; margin-bottom: 15px;">密钥使用说明</h3>
+                    <ul style="color: #666; line-height: 2; padding-left: 20px;">
+                        <li>将此密钥添加到请求头中: <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 4px;">Authorization: Bearer &lt;your-key&gt;</code></li>
+                        <li>每个账号最多拥有3个活跃密钥</li>
+                        <li>请妥善保管您的密钥，泄露后请立即撤销</li>
+                    </ul>
+                </div>
+                
+                <!-- 充值 -->
+                <div id="recharge-section" style="display: none;">
+                    <h2>💳 充值中心</h2>
+                    <div class="pricing-grid">
+                        <div class="pricing-card">
+                            <h4>体验版</h4>
+                            <div class="price">¥99</div>
+                            <div class="unit">/ 1000次调用</div>
+                            <div class="desc">适合个人开发者</div>
+                            <button class="btn" style="margin-top: 15px;" onclick="recharge(99)">立即充值</button>
+                        </div>
+                        <div class="pricing-card featured">
+                            <h4>专业版</h4>
+                            <div class="price">¥499</div>
+                            <div class="unit">/ 10000次调用</div>
+                            <div class="desc">适合小型团队</div>
+                            <button class="btn" style="margin-top: 15px;" onclick="recharge(499)">立即充值</button>
+                        </div>
+                        <div class="pricing-card">
+                            <h4>企业版</h4>
+                            <div class="price">¥1999</div>
+                            <div class="unit">/ 50000次调用</div>
+                            <div class="desc">适合企业用户</div>
+                            <button class="btn" style="margin-top: 15px;" onclick="recharge(1999)">立即充值</button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 30px; padding: 20px; background: #fef3c7; border-radius: 10px;">
+                        <h4 style="color: #92400e; margin-bottom: 10px;">💡 充值说明</h4>
+                        <p style="color: #b45309; font-size: 14px; line-height: 1.8;">
+                            充值后额度即时到账，有效期1年。支持微信支付、支付宝等多种支付方式。如有问题请联系客服。
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 使用记录 -->
+                <div id="usage-section" style="display: none;">
+                    <h2>📋 使用记录</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>时间</th>
+                                <th>服务商</th>
+                                <th>模型</th>
+                                <th>消耗额度</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2026-05-02 14:30:00</td>
+                                <td>OpenAI</td>
+                                <td>gpt-3.5-turbo</td>
+                                <td>0.01元</td>
+                                <td style="color: #10b981;">成功</td>
+                            </tr>
+                            <tr>
+                                <td>2026-05-02 14:25:00</td>
+                                <td>Anthropic</td>
+                                <td>claude-3-sonnet</td>
+                                <td>0.02元</td>
+                                <td style="color: #10b981;">成功</td>
+                            </tr>
+                            <tr>
+                                <td>2026-05-01 16:45:00</td>
+                                <td>OpenAI</td>
+                                <td>gpt-4</td>
+                                <td>0.05元</td>
+                                <td style="color: #10b981;">成功</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 侧边栏导航切换
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+                
+                const target = this.getAttribute('href').substring(1);
+                document.querySelectorAll('.panel > div').forEach(section => section.style.display = 'none');
+                document.getElementById(target + '-section').style.display = 'block';
+            });
+        });
+        
+        // 复制API密钥
+        function copyApiKey() {
+            const key = 'sk-your-api-key-here-12345';
+            navigator.clipboard.writeText(key).then(() => {
+                alert('✅ 已复制到剪贴板');
+            });
+        }
+        
+        // 生成新密钥
+        function generateNewKey() {
+            if (confirm('确定要生成新密钥吗？旧密钥将立即失效。')) {
+                alert('✅ 新密钥已生成！\n\n新密钥: sk-new-key-generated-abcde');
+            }
+        }
+        
+        // 撤销密钥
+        function revokeKey() {
+            if (confirm('确定要撤销当前密钥吗？此操作不可恢复。')) {
+                alert('✅ 密钥已撤销');
+            }
+        }
+        
+        // 注册
+        function register() {
+            const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const password2 = document.getElementById('reg-password2').value;
+            
+            if (!username || !email || !password) {
+                alert('请填写完整信息');
+                return;
+            }
+            
+            if (password !== password2) {
+                alert('两次输入的密码不一致');
+                return;
+            }
+            
+            alert('✅ 注册成功！\n\n用户名: ' + username + '\n邮箱: ' + email);
+        }
+        
+        // 充值
+        function recharge(amount) {
+            alert('正在跳转到支付页面...\n\n充值金额: ¥' + amount);
+        }
+    </script>
+</body>
+</html>
