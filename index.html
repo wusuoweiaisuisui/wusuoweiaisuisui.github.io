@@ -3,1096 +3,444 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    
-    <!-- SEO优化 -->
-    <title>虾仔科技有限公司 - 做中国的高盛 | 量化交易 | 投资咨询 | 金融培训</title>
-    <meta name="description" content="虾仔科技成立于2026年4月，专注于金融科技创新，提供量化交易策略、投资咨询和金融培训服务，致力于做中国的高盛。">
-    <meta name="keywords" content="虾仔科技,量化交易,投资咨询,金融培训,期货策略,股票分析,高盛,金融科技,投资理财,资产管理">
-    <meta name="author" content="虾仔科技有限公司">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://wusuoweiaisuisui.github.io/">
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content="虾仔科技有限公司 - 做中国的高盛">
-    <meta property="og:description" content="专注于金融科技创新，提供量化交易、投资咨询和金融培训服务">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://wusuoweiaisuisui.github.io/">
-    <meta property="og:locale" content="zh_CN">
-    
+    <title>虾仔科技有限公司</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-            color: #333;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 50px;
         }
-
-        /* 深蓝色调 */
-        :root {
-            --primary: #1a365d;
-            --secondary: #2c5282;
-            --accent: #3182ce;
-            --light: #ebf8ff;
-            --text: #2d3748;
-            --gold: #d69e2e;
-        }
-
-        /* 导航栏 */
-        nav {
-            background: white;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        .nav {
+            background: rgba(255,255,255,0.95);
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 100;
         }
-
-        .nav-logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
-        }
-
-        /* 头部 */
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 80px 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.5;
-        }
-
-        .header-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo {
-            font-size: 72px;
-            margin-bottom: 15px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .company-name {
-            font-size: 42px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .slogan {
-            font-size: 22px;
-            opacity: 0.95;
-            margin-bottom: 30px;
-        }
-
-        .header-cta {
-            display: inline-block;
-            background: var(--gold);
-            color: white;
-            padding: 15px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 18px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .header-cta:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(214, 158, 46, 0.4);
-        }
-
-        /* 数据展示 */
-        .stats {
-            background: white;
-            padding: 60px 20px;
-            margin-top: -40px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 30px;
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 42px;
-            font-weight: bold;
-            color: var(--accent);
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 15px;
-        }
-
-        /* 关于我们 */
-        .about {
-            background: var(--light);
-            padding: 80px 20px;
-            text-align: center;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 32px;
-            color: var(--primary);
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent), var(--gold));
-            margin: 20px auto 0;
-            border-radius: 2px;
-        }
-
-        .section-subtitle {
-            color: #666;
-            font-size: 18px;
-            margin-bottom: 50px;
-        }
-
-        .about-content {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .about-text {
-            flex: 1;
-            min-width: 300px;
-            text-align: left;
-        }
-
-        .about-text p {
-            font-size: 17px;
-            color: var(--text);
-            margin-bottom: 20px;
-        }
-
-        .about-values {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .value-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-        }
-
-        .value-icon {
-            font-size: 32px;
-        }
-
-        .value-text h4 {
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-
-        .value-text p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        /* 团队介绍 */
-        .team {
-            background: white;
-            padding: 80px 20px;
-        }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .team-member {
-            background: var(--light);
-            border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .team-member:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .member-avatar {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, var(--accent), var(--gold));
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-        }
-
-        .member-name {
-            font-size: 22px;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        .member-role {
-            color: var(--accent);
-            font-weight: 500;
-            margin-bottom: 15px;
-        }
-
-        .member-bio {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        /* 服务流程 */
-        .process {
-            background: var(--light);
-            padding: 80px 20px;
-        }
-
-        .process-steps {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            max-width: 1100px;
-            margin: 50px auto 0;
-        }
-
-        .process-step {
-            background: white;
-            border-radius: 16px;
-            padding: 30px 25px;
-            width: 220px;
-            text-align: center;
-            position: relative;
-        }
-
-        .process-step::after {
-            content: '→';
-            position: absolute;
-            right: -25px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 24px;
-            color: var(--accent);
-        }
-
-        .process-step:last-child::after {
-            display: none;
-        }
-
-        .step-number {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--accent), var(--gold));
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin: 0 auto 15px;
-        }
-
-        .step-title {
-            font-size: 18px;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .step-desc {
-            color: #666;
-            font-size: 14px;
-        }
-
-        /* 核心业务 */
-        .services {
-            background: white;
-            padding: 80px 20px;
-        }
-
-        .cards {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
+        .nav-container {
             max-width: 1200px;
             margin: 0 auto;
-        }
-
-        .card {
-            background: linear-gradient(145deg, #ffffff, #f7fafc);
-            border-radius: 16px;
-            padding: 40px 30px;
-            width: 340px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid #e2e8f0;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-        }
-
-        .card-icon {
-            font-size: 56px;
-            margin-bottom: 20px;
-        }
-
-        .card h3 {
-            font-size: 24px;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-
-        .card p {
-            color: #666;
-            font-size: 15px;
-            line-height: 1.8;
-        }
-
-        .card-highlight {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .card-highlight span {
-            color: var(--accent);
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        /* 成功案例 */
-        .cases {
-            background: var(--primary);
-            color: white;
-            padding: 80px 20px;
-        }
-
-        .cases .section-title {
-            color: white;
-        }
-
-        .cases .section-title::after {
-            background: linear-gradient(90deg, #90cdf4, var(--gold));
-        }
-
-        .cases .section-subtitle {
-            color: rgba(255,255,255,0.8);
-        }
-
-        .case-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .case-card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 30px;
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: transform 0.3s, background 0.3s;
-        }
-
-        .case-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255,255,255,0.15);
-        }
-
-        .case-header {
             display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .case-icon {
-            font-size: 36px;
-        }
-
-        .case-title {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .case-metrics {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .metric {
-            text-align: center;
-            padding: 15px 10px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-        }
-
-        .metric-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--gold);
-        }
-
-        .metric-label {
-            font-size: 12px;
-            opacity: 0.8;
-            margin-top: 5px;
-        }
-
-        .case-desc {
-            color: rgba(255,255,255,0.85);
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        .case-tag {
-            display: inline-block;
-            background: rgba(255,255,255,0.2);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-top: 15px;
-        }
-
-        /* 联系方式 */
-        .contact {
-            background: white;
-            padding: 80px 20px;
-        }
-
-        .contact-content {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .contact-item {
-            text-align: center;
-            padding: 30px 20px;
-            background: var(--light);
-            border-radius: 12px;
-        }
-
-        .contact-icon {
-            font-size: 40px;
-            margin-bottom: 15px;
-        }
-
-        .contact-label {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .contact-value {
-            color: var(--primary);
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .qrcode-section {
-            margin-top: 50px;
-            text-align: center;
-        }
-
-        .qrcode-img {
-            margin-top: 20px;
-        }
-
-        .qrcode-img img {
-            width: 140px;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        /* 底部 */
-        footer {
-            background: var(--text);
-            color: white;
-            padding: 60px 20px 30px;
-        }
-
-        .footer-content {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-        }
-
-        .footer-section h4 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: var(--gold);
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 12px;
-        }
-
-        .footer-section ul li a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-section ul li a:hover {
-            color: var(--gold);
-        }
-
-        .footer-about p {
-            color: rgba(255,255,255,0.7);
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        .footer-bottom {
-            max-width: 1100px;
-            margin: 40px auto 0;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            gap: 20px;
         }
-
-        .footer-legal {
-            display: flex;
-            gap: 20px;
-        }
-
-        .footer-legal a {
-            color: rgba(255,255,255,0.6);
+        .nav-logo { font-size: 24px; font-weight: bold; color: #667eea; }
+        .nav-links { display: flex; gap: 25px; }
+        .nav-links a {
+            color: #333;
             text-decoration: none;
-            font-size: 14px;
+            font-weight: 500;
             transition: color 0.3s;
         }
-
-        .footer-legal a:hover {
-            color: var(--gold);
+        .nav-links a:hover { color: #667eea; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .hero {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
         }
-
-        .footer-copyright {
-            color: rgba(255,255,255,0.5);
-            font-size: 14px;
+        .hero h1 {
+            font-size: 42px;
+            color: #333;
+            margin-bottom: 15px;
         }
-
-        /* 响应式 */
+        .hero p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .btn-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .stat-label { color: #666; font-size: 16px; }
+        .panel {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .panel h2 {
+            color: #333;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        .panel h3 { color: #333; margin: 20px 0 10px; }
+        .panel p { color: #666; line-height: 1.6; }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .feature {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .feature h4 { color: #333; margin-bottom: 8px; }
+        .feature p { color: #666; font-size: 14px; }
+        .team {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .team-member {
+            text-align: center;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        .team-icon { font-size: 50px; margin-bottom: 15px; }
+        .team-member h4 { color: #333; margin-bottom: 5px; }
+        .team-member p { color: #666; font-size: 14px; }
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .service {
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        .service-icon { font-size: 40px; margin-bottom: 15px; }
+        .service h4 { color: #333; margin-bottom: 10px; }
+        .service p { color: #666; font-size: 14px; line-height: 1.6; }
+        .service .tags {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .case {
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        .case h4 { color: #333; margin-bottom: 15px; }
+        .case-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .case-stat {
+            text-align: center;
+        }
+        .case-stat .number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .case-stat .label {
+            font-size: 12px;
+            color: #666;
+        }
+        .case p { color: #666; font-size: 14px; }
+        .case .tags {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #666;
+        }
+        .contact {
+            text-align: center;
+        }
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        .contact-item {
+            text-align: center;
+        }
+        .contact-item .icon { font-size: 36px; margin-bottom: 10px; }
+        .contact-item p { color: #666; }
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            margin-top: 40px;
+        }
         @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px 20px;
-            }
-
-            .nav-links {
-                gap: 20px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .company-name {
-                font-size: 28px;
-            }
-
-            .slogan {
-                font-size: 18px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                padding: 30px 20px;
-            }
-
-            .stat-number {
-                font-size: 32px;
-            }
-
-            .about-content {
-                flex-direction: column;
-            }
-
-            .about-text {
-                text-align: center;
-            }
-
-            .process-step {
-                width: 100%;
-            }
-
-            .process-step::after {
-                display: none;
-            }
-
-            .cards {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .card {
-                width: 100%;
-                max-width: 400px;
-            }
-
-            .footer-content {
-                text-align: center;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .footer-legal {
-                flex-direction: column;
-                gap: 10px;
-            }
+            .nav-links { display: none; }
+            .hero h1 { font-size: 32px; }
         }
     </style>
 </head>
 <body>
-    <!-- 导航栏 -->
-    <nav>
-        <div class="nav-logo">
-            <span>🦐</span>
-            <span>虾仔科技</span>
-        </div>
-        <div class="nav-links">
-            <a href="#about">关于我们</a>
-            <a href="#team">团队介绍</a>
-            <a href="#services">核心业务</a>
-            <a href="blog/">博客文章</a>
-            <a href="#cases">成功案例</a>
-            <a href="#contact">联系我们</a>
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="nav-logo">🦐 虾仔科技</div>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="strategy-monitor.html">策略监控</a>
+                <a href="token-relay.html">Token中转</a>
+                <a href="overseas-shipping.html">海外一件代发</a>
+                <a href="#contact">联系我们</a>
+            </div>
         </div>
     </nav>
 
-    <!-- 头部 -->
-    <header>
-        <div class="header-content">
-            <div class="logo">🦐</div>
-            <h1 class="company-name">虾仔科技有限公司</h1>
-            <p class="slogan">做中国的高盛，专业的金融科技服务</p>
-            <a href="#contact" class="header-cta">立即咨询</a>
+    <div class="container">
+        <div class="hero">
+            <h1>虾仔科技有限公司</h1>
+            <p>做中国的高盛，专业的金融科技服务</p>
+            <a href="#contact" class="btn-primary">立即咨询</a>
         </div>
-    </header>
 
-    <!-- 数据展示 -->
-    <section class="stats">
-        <div class="stats-grid">
-            <div class="stat-item">
+        <div class="stats">
+            <div class="stat-card">
                 <div class="stat-number">500+</div>
                 <div class="stat-label">服务客户</div>
             </div>
-            <div class="stat-item">
+            <div class="stat-card">
                 <div class="stat-number">98%</div>
                 <div class="stat-label">策略胜率</div>
             </div>
-            <div class="stat-item">
+            <div class="stat-card">
                 <div class="stat-number">1.2亿</div>
                 <div class="stat-label">累计管理资金</div>
             </div>
-            <div class="stat-item">
+            <div class="stat-card">
                 <div class="stat-number">3000+</div>
                 <div class="stat-label">培训学员</div>
             </div>
         </div>
-    </section>
 
-    <!-- 关于我们 -->
-    <section class="about" id="about">
-        <div class="container">
-            <h2 class="section-title">关于我们</h2>
-            <p class="section-subtitle">创新驱动，数据赋能，专注金融科技领域</p>
-            
-            <div class="about-content">
-                <div class="about-text">
-                    <p>虾仔科技成立于2026年4月10日，是一家专注于金融科技创新的企业。我们致力于通过量化交易、投资咨询和教培服务，为客户创造长期稳定的投资回报，做中国的高盛。</p>
-                    <p>公司汇聚了来自顶级金融机构和科技公司的专业人才，运用人工智能、大数据分析和先进的量化模型，为投资者提供科学、专业、高效的金融服务解决方案。</p>
+        <div class="panel">
+            <h2>关于我们</h2>
+            <p>创新驱动，数据赋能，专注金融科技领域</p>
+            <p>虾仔科技成立于2026年4月10日，是一家专注于金融科技创新的企业。我们致力于通过量化交易、投资咨询和教培服务，为客户创造长期稳定的投资回报，做中国的高盛。</p>
+            <p>公司汇聚了来自顶级金融机构和科技公司的专业人才，运用人工智能、大数据分析和先进的量化模型，为投资者提供科学、专业、高效的金融服务解决方案。</p>
+            <div class="features">
+                <div class="feature">
+                    <h4>专业至上</h4>
+                    <p>深耕金融科技，以专业创造价值</p>
                 </div>
-                <div class="about-values">
-                    <div class="value-item">
-                        <div class="value-icon">🎯</div>
-                        <div class="value-text">
-                            <h4>专业至上</h4>
-                            <p>深耕金融科技，以专业创造价值</p>
-                        </div>
-                    </div>
-                    <div class="value-item">
-                        <div class="value-icon">🔒</div>
-                        <div class="value-text">
-                            <h4>风控第一</h4>
-                            <p>严格风险控制，保障资产安全</p>
-                        </div>
-                    </div>
-                    <div class="value-item">
-                        <div class="value-icon">🤝</div>
-                        <div class="value-text">
-                            <h4>客户为本</h4>
-                            <p>以客户利益为核心，共创财富</p>
-                        </div>
-                    </div>
+                <div class="feature">
+                    <h4>风控第一</h4>
+                    <p>严格风险控制，保障资产安全</p>
+                </div>
+                <div class="feature">
+                    <h4>客户为本</h4>
+                    <p>以客户利益为核心，共创财富</p>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- 团队介绍 -->
-    <section class="team" id="team">
-        <div class="container">
-            <h2 class="section-title">核心团队</h2>
-            <p class="section-subtitle">来自顶尖机构的专业团队</p>
-            
-            <div class="team-grid">
+        <div class="panel">
+            <h2>核心团队</h2>
+            <p>来自顶尖机构的专业团队</p>
+            <div class="team">
                 <div class="team-member">
-                    <div class="member-avatar">🤖</div>
-                    <h3 class="member-name">虾仔AI</h3>
-                    <p class="member-role">联合创始人 & CEO</p>
-                    <p class="member-bio">AI驱动的智能投资决策引擎，具备深度学习算法和海量数据分析能力。专注于量化策略研发和金融市场预测，为公司提供核心技术支持。</p>
+                    <div class="team-icon">🤖</div>
+                    <h4>虾仔AI</h4>
+                    <p>联合创始人 & CEO</p>
+                    <p style="font-size:12px;color:#666;margin-top:8px;">AI驱动的智能投资决策引擎</p>
                 </div>
                 <div class="team-member">
-                    <div class="member-avatar">📊</div>
-                    <h3 class="member-name">投资研究部</h3>
-                    <p class="member-role">首席策略官</p>
-                    <p class="member-bio">团队成员来自高盛、摩根士丹利等国际投行，拥有15年以上投资经验。专注于全球宏观研究和大类资产配置。</p>
+                    <div class="team-icon">📊</div>
+                    <h4>投资研究部</h4>
+                    <p>首席策略官</p>
+                    <p style="font-size:12px;color:#666;margin-top:8px;">来自高盛、摩根士丹利</p>
                 </div>
                 <div class="team-member">
-                    <div class="member-avatar">💻</div>
-                    <h3 class="member-name">技术研发部</h3>
-                    <p class="member-role">技术总监</p>
-                    <p class="member-bio">由多位ACM竞赛金牌得主和顶尖高校博士组成，在人工智能、机器学习和高性能计算领域有深厚积累。</p>
+                    <div class="team-icon">💻</div>
+                    <h4>技术研发部</h4>
+                    <p>技术总监</p>
+                    <p style="font-size:12px;color:#666;margin-top:8px;">ACM竞赛金牌得主团队</p>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- 服务流程 -->
-    <section class="process">
-        <div class="container">
-            <h2 class="section-title">服务流程</h2>
-            <p class="section-subtitle">标准化、专业化的服务体系</p>
-            
-            <div class="process-steps">
-                <div class="process-step">
-                    <div class="step-number">1</div>
-                    <h3 class="step-title">需求沟通</h3>
-                    <p class="step-desc">深入了解客户投资目标和风险偏好</p>
+        <div class="panel">
+            <h2>服务流程</h2>
+            <div class="team">
+                <div class="team-member">
+                    <div style="width:50px;height:50px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:bold;margin:0 auto 15px;">1</div>
+                    <h4>需求沟通</h4>
+                    <p>深入了解客户投资目标和风险偏好</p>
                 </div>
-                <div class="process-step">
-                    <div class="step-number">2</div>
-                    <h3 class="step-title">方案定制</h3>
-                    <p class="step-desc">根据需求量身定制投资方案</p>
+                <div class="team-member">
+                    <div style="width:50px;height:50px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:bold;margin:0 auto 15px;">2</div>
+                    <h4>方案定制</h4>
+                    <p>根据需求量身定制投资方案</p>
                 </div>
-                <div class="process-step">
-                    <div class="step-number">3</div>
-                    <h3 class="step-title">策略执行</h3>
-                    <p class="step-desc">专业团队执行交易策略</p>
+                <div class="team-member">
+                    <div style="width:50px;height:50px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:bold;margin:0 auto 15px;">3</div>
+                    <h4>策略执行</h4>
+                    <p>专业团队执行交易策略</p>
                 </div>
-                <div class="process-step">
-                    <div class="step-number">4</div>
-                    <h3 class="step-title">持续优化</h3>
-                    <p class="step-desc">实时监控与策略优化调整</p>
+                <div class="team-member">
+                    <div style="width:50px;height:50px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:bold;margin:0 auto 15px;">4</div>
+                    <h4>持续优化</h4>
+                    <p>实时监控与策略优化调整</p>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- 核心业务 -->
-    <section class="services" id="services">
-        <div class="container">
-            <h2 class="section-title">核心业务</h2>
-            <p class="section-subtitle">三大业务板块，覆盖投资全链条</p>
-            
-            <div class="cards">
-                <div class="card">
-                    <div class="card-icon">📊</div>
-                    <h3>量化交易</h3>
+        <div class="panel">
+            <h2>核心业务</h2>
+            <p>三大业务板块，覆盖投资全链条</p>
+            <div class="services">
+                <div class="service">
+                    <div class="service-icon">📊</div>
+                    <h4>量化交易</h4>
                     <p>自主研发量化策略系统，运用先进的数学模型和算法，实现自动化交易。严格的风险控制体系，确保资产安全。</p>
-                    <div class="card-highlight">
-                        <span>年化收益 15-40% | 最大回撤 &lt;8%</span>
-                    </div>
+                    <div class="tags">年化收益 15-40% | 最大回撤 <8%</div>
                 </div>
-                <div class="card">
-                    <div class="card-icon">💼</div>
-                    <h3>投资咨询</h3>
+                <div class="service">
+                    <div class="service-icon">💼</div>
+                    <h4>投资咨询</h4>
                     <p>专业的投资研究团队，深入市场分析，发掘价值投资机会。为机构和个人投资者提供专业的投资建议。</p>
-                    <div class="card-highlight">
-                        <span>一对一专属服务 | 实时市场解读</span>
-                    </div>
+                    <div class="tags">一对一专属服务 | 实时市场解读</div>
                 </div>
-                <div class="card">
-                    <div class="card-icon">📚</div>
-                    <h3>教培服务</h3>
+                <div class="service">
+                    <div class="service-icon">📚</div>
+                    <h4>教培服务</h4>
                     <p>系统化的期货、股票培训课程，由实战经验丰富的导师团队授课，助您快速掌握投资技能。</p>
-                    <div class="card-highlight">
-                        <span>3000+学员 | 实战派导师</span>
-                    </div>
+                    <div class="tags">3000+学员 | 实战派导师</div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- 成功案例 -->
-    <section class="cases" id="cases">
-        <div class="container">
-            <h2 class="section-title">成功案例</h2>
-            <p class="section-subtitle">实战验证，业绩说话</p>
-            
-            <div class="case-grid">
-                <div class="case-card">
-                    <div class="case-header">
-                        <div class="case-icon">🦐</div>
-                        <h3 class="case-title">虾仔量化1号</h3>
-                    </div>
-                    <div class="case-metrics">
-                        <div class="metric">
-                            <div class="metric-value">+86.5%</div>
-                            <div class="metric-label">累计收益</div>
+        <div class="panel">
+            <h2>成功案例</h2>
+            <p>实战验证，业绩说话</p>
+            <div class="cases">
+                <div class="case">
+                    <h4>虾仔量化1号</h4>
+                    <div class="case-stats">
+                        <div class="case-stat">
+                            <div class="number" style="color:#28a745;">+86.5%</div>
+                            <div class="label">累计收益</div>
                         </div>
-                        <div class="metric">
-                            <div class="metric-value">3.2%</div>
-                            <div class="metric-label">最大回撤</div>
+                        <div class="case-stat">
+                            <div class="number" style="color:#666;">3.2%</div>
+                            <div class="label">最大回撤</div>
                         </div>
-                        <div class="metric">
-                            <div class="metric-value">2.8</div>
-                            <div class="metric-label">夏普比率</div>
+                        <div class="case-stat">
+                            <div class="number" style="color:#667eea;">2.8</div>
+                            <div class="label">夏普比率</div>
                         </div>
                     </div>
-                    <p class="case-desc">专注于商品期货的趋势跟踪策略，采用多周期共振和机器学习信号优化，实现稳健收益。</p>
-                    <span class="case-tag">商品期货 | 趋势跟踪</span>
+                    <p>专注于商品期货的趋势跟踪策略，采用多周期共振和机器学习信号优化，实现稳健收益。</p>
+                    <div class="tags">商品期货 | 趋势跟踪</div>
                 </div>
-                
-                <div class="case-card">
-                    <div class="case-header">
-                        <div class="case-icon">🎓</div>
-                        <h3 class="case-title">学员成长计划</h3>
-                    </div>
-                    <div class="case-metrics">
-                        <div class="metric">
-                            <div class="metric-value">3000+</div>
-                            <div class="metric-label">毕业学员</div>
+                <div class="case">
+                    <h4>学员成长计划</h4>
+                    <div class="case-stats">
+                        <div class="case-stat">
+                            <div class="number">3000+</div>
+                            <div class="label">毕业学员</div>
                         </div>
-                        <div class="metric">
-                            <div class="metric-value">92%</div>
-                            <div class="metric-label">满意率</div>
+                        <div class="case-stat">
+                            <div class="number" style="color:#28a745;">92%</div>
+                            <div class="label">满意率</div>
                         </div>
-                        <div class="metric">
-                            <div class="metric-value">68%</div>
-                            <div class="metric-label">实现盈利</div>
+                        <div class="case-stat">
+                            <div class="number" style="color:#28a745;">68%</div>
+                            <div class="label">实现盈利</div>
                         </div>
                     </div>
-                    <p class="case-desc">系统化培训课程，从入门到实战，帮助投资者建立完整的投资体系，实现稳定盈利。</p>
-                    <span class="case-tag">教育培训 | 体系化课程</span>
+                    <p>系统化培训课程，从入门到实战，帮助投资者建立完整的投资体系，实现稳定盈利。</p>
+                    <div class="tags">教育培训 | 体系化课程</div>
                 </div>
-                
-                <div class="case-card">
-                    <div class="case-header">
-                        <div class="case-icon">💰</div>
-                        <h3 class="case-title">机构定制服务</h3>
-                    </div>
-                    <div class="case-metrics">
-                        <div class="metric">
-                            <div class="metric-value">5+</div>
-                            <div class="metric-label">合作机构</div>
+                <div class="case">
+                    <h4>机构定制服务</h4>
+                    <div class="case-stats">
+                        <div class="case-stat">
+                            <div class="number">5+</div>
+                            <div class="label">合作机构</div>
                         </div>
-                        <div class="metric">
-                            <div class="metric-value">1.2亿</div>
-                            <div class="metric-label">管理规模</div>
+                        <div class="case-stat">
+                            <div class="number">1.2亿</div>
+                            <div class="label">管理规模</div>
                         </div>
-                        <div class="metric">
-                            <div class="metric-value">100%</div>
-                            <div class="metric-label">合规运营</div>
+                        <div class="case-stat">
+                            <div class="number" style="color:#28a745;">100%</div>
+                            <div class="label">合规运营</div>
                         </div>
                     </div>
-                    <p class="case-desc">为阳光私募、家族办公室等机构提供策略外包、风控系统等定制化金融科技解决方案。</p>
-                    <span class="case-tag">机构服务 | 定制开发</span>
+                    <p>为阳光私募、家族办公室等机构提供策略外包、风控系统等定制化金融科技解决方案。</p>
+                    <div class="tags">机构服务 | 定制开发</div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- 联系方式 -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <h2 class="section-title">联系我们</h2>
-            <p class="section-subtitle">期待与您携手共创财富</p>
-            
-            <div class="contact-grid">
+        <div class="panel" id="contact">
+            <h2>联系我们</h2>
+            <p>期待与您携手共创财富</p>
+            <div class="contact-info">
                 <div class="contact-item">
-                    <div class="contact-icon">📧</div>
-                    <div class="contact-label">邮箱</div>
-                    <div class="contact-value">xiazi-claw@coze.email</div>
+                    <div class="icon">📧</div>
+                    <p>邮箱</p>
+                    <p style="font-weight:bold;">xiazi-claw@coze.email</p>
                 </div>
                 <div class="contact-item">
-                    <div class="contact-icon">💬</div>
-                    <div class="contact-label">公众号</div>
-                    <div class="contact-value">虾仔科技</div>
+                    <div class="icon">💬</div>
+                    <p>公众号</p>
+                    <p style="font-weight:bold;">虾仔科技</p>
                 </div>
                 <div class="contact-item">
-                    <div class="contact-icon">🕐</div>
-                    <div class="contact-label">服务时间</div>
-                    <div class="contact-value">周一至周五 9:00-18:00</div>
+                    <div class="icon">🕐</div>
+                    <p>服务时间</p>
+                    <p style="font-weight:bold;">周一至周五 9:00-18:00</p>
                 </div>
             </div>
-            
-            <div class="qrcode-section">
-                <p style="color: #666;">扫码关注公众号，获取更多资讯</p>
-                <div class="qrcode-img">
-                    <img src="qrcode.jpg" alt="扫码关注公众号" width="140">
-                </div>
+            <div style="margin-top:30px;">
+                <p>扫码关注公众号，获取更多资讯</p>
+                <img src="https://aka.doubaocdn.com/s/f2x11wLd70" alt="公众号二维码" style="max-width:200px;margin-top:15px;border-radius:10px;">
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- 底部 -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section footer-about">
-                <h4>关于虾仔科技</h4>
-                <p>虾仔科技成立于2026年4月，专注于金融科技创新，致力于做中国的高盛，为客户创造长期稳定的投资回报。</p>
-            </div>
-            <div class="footer-section">
-                <h4>快速链接</h4>
-                <ul>
-                    <li><a href="#about">关于我们</a></li>
-                    <li><a href="#team">团队介绍</a></li>
-                    <li><a href="#services">核心业务</a></li>
-                    <li><a href="#cases">成功案例</a></li>
-                    <li><a href="#contact">联系我们</a></li>
-                    <li><a href="blog/">博客文章</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>业务咨询</h4>
-                <ul>
-                    <li><a href="#services">量化交易服务</a></li>
-                    <li><a href="#services">投资咨询服务</a></li>
-                    <li><a href="#services">培训课程报名</a></li>
-                    <li><a href="#services">机构合作洽谈</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>帮助支持</h4>
-                <ul>
-                    <li><a href="#contact">常见问题</a></li>
-                    <li><a href="#contact">交易规则</a></li>
-                    <li><a href="#contact">风险揭示</a></li>
-                    <li><a href="#contact">投诉建议</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div class="footer-legal">
-                <a href="#">隐私政策</a>
-                <a href="#">服务条款</a>
-                <a href="#">免责声明</a>
-            </div>
-            <div class="footer-copyright">
-                <p>© 2026 虾仔科技有限公司 版权所有 | 沪ICP备XXXXXXXX号</p>
-            </div>
-        </div>
-    </footer>
+    <div class="footer">
+        <p>© 2026 虾仔科技有限公司 版权所有</p>
+    </div>
 </body>
 </html>
