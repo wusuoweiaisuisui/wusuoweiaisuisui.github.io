@@ -13,7 +13,7 @@
             padding: 20px;
         }
         .container { max-width: 1000px; margin: 0 auto; }
-        
+
         .nav {
             background: white;
             padding: 15px 30px;
@@ -33,17 +33,17 @@
             transition: all 0.3s;
         }
         .nav-links a:hover { background: #667eea; color: white; }
-        
+
         .main-content {
             display: grid;
             grid-template-columns: 280px 1fr;
             gap: 25px;
         }
-        
+
         @media (max-width: 768px) {
             .main-content { grid-template-columns: 1fr; }
         }
-        
+
         .sidebar {
             background: white;
             border-radius: 16px;
@@ -65,7 +65,7 @@
             background: #667eea;
             color: white;
         }
-        
+
         .panel {
             background: white;
             border-radius: 16px;
@@ -73,10 +73,9 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             min-height: 400px;
         }
-        
+
         .panel h2 { color: #333; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #f0f0f0; }
-        
-        /* 表单样式 */
+
         .form-group { margin-bottom: 20px; }
         .form-group label {
             display: block;
@@ -93,7 +92,7 @@
             transition: all 0.3s;
         }
         .form-group input:focus { outline: none; border-color: #667eea; }
-        
+
         .btn {
             display: inline-block;
             padding: 12px 30px;
@@ -109,8 +108,7 @@
         .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4); }
         .btn-success { background: #10b981; }
         .btn-danger { background: #ef4444; }
-        
-        /* 卡片样式 */
+
         .card {
             background: #f8fafc;
             padding: 25px;
@@ -119,8 +117,7 @@
         }
         .card h4 { color: #333; margin-bottom: 15px; }
         .card .value { font-size: 28px; font-weight: bold; color: #667eea; }
-        
-        /* API密钥显示 */
+
         .api-key-box {
             background: #1e1e1e;
             color: #d4d4d4;
@@ -145,8 +142,7 @@
             cursor: pointer;
             font-size: 12px;
         }
-        
-        /* 充值选项 */
+
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -169,18 +165,7 @@
         .pricing-card .price { font-size: 32px; font-weight: bold; color: #667eea; }
         .pricing-card .unit { font-size: 14px; color: #666; }
         .pricing-card .desc { font-size: 14px; color: #666; margin-top: 10px; }
-        
-        /* 通知消息 */
-        .alert {
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        .alert.success { background: #dcfce7; color: #166534; }
-        .alert.error { background: #fee2e2; color: #991b1b; }
-        
-        /* 表格 */
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -193,6 +178,25 @@
         }
         th { background: #f8fafc; font-weight: 600; color: #333; }
         td { color: #666; }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .message.success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .message.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+        .user-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .user-info h3 { margin-bottom: 10px; }
+        .user-info p { opacity: 0.9; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -208,7 +212,7 @@
                 </div>
             </div>
         </nav>
-        
+
         <div class="main-content">
             <div class="sidebar">
                 <h3>用户菜单</h3>
@@ -220,30 +224,54 @@
                     <li><a href="#usage">使用记录</a></li>
                 </ul>
             </div>
-            
+
             <div class="panel">
+                <!-- 消息提示 -->
+                <div class="message" id="messageBox"></div>
+
                 <!-- 控制台 -->
                 <div id="dashboard-section">
                     <h2>📊 控制台</h2>
-                    <div class="card">
-                        <h4>账户余额</h4>
-                        <div class="value">¥ 0.00</div>
+                    <div id="loggedOutView">
+                        <p style="color: #666; margin-bottom: 20px;">请先登录或注册账号</p>
+                        <button class="btn" onclick="showSection('register')">去注册</button>
+                        <button class="btn btn-success" onclick="showSection('login')" style="margin-left: 10px;">去登录</button>
                     </div>
-                    <div class="card">
-                        <h4>本月使用量</h4>
-                        <div class="value">0 次</div>
-                        <p style="color: #666; margin-top: 10px; font-size: 14px;">API调用次数</p>
-                    </div>
-                    <div class="card">
-                        <h4>API密钥</h4>
-                        <div class="api-key-box">
-                            sk-your-api-key-here-12345
-                            <button class="copy-btn" onclick="copyApiKey()">复制</button>
+                    <div id="loggedInView" style="display: none;">
+                        <div class="user-info">
+                            <h3>欢迎回来，<span id="usernameDisplay">-</span>！</h3>
+                            <p>邮箱：<span id="emailDisplay">-</span></p>
                         </div>
-                        <button class="btn btn-success" onclick="generateNewKey()">🔑 生成新密钥</button>
+                        <div class="card">
+                            <h4>账户余额</h4>
+                            <div class="value">¥ <span id="balanceDisplay">0.00</span></div>
+                        </div>
+                        <div class="card">
+                            <h4>API密钥</h4>
+                            <div class="api-key-box">
+                                <span id="apiKeyDisplay">-</span>
+                                <button class="copy-btn" onclick="copyApiKey()">复制</button>
+                            </div>
+                        </div>
+                        <button class="btn btn-danger" onclick="logout()">退出登录</button>
                     </div>
                 </div>
-                
+
+                <!-- 登录 -->
+                <div id="login-section" style="display: none;">
+                    <h2>🔐 登录账号</h2>
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" id="login-username" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input type="password" id="login-password" placeholder="请输入密码">
+                    </div>
+                    <button class="btn btn-success" onclick="login()">登录</button>
+                    <button class="btn" onclick="showSection('register')" style="margin-left: 10px;">没有账号？去注册</button>
+                </div>
+
                 <!-- 注册 -->
                 <div id="register-section" style="display: none;">
                     <h2>📝 注册账号</h2>
@@ -264,29 +292,31 @@
                         <input type="password" id="reg-password2" placeholder="请再次输入密码">
                     </div>
                     <button class="btn" onclick="register()">注册</button>
+                    <button class="btn btn-success" onclick="showSection('login')" style="margin-left: 10px;">已有账号？去登录</button>
                 </div>
-                
+
                 <!-- API密钥 -->
                 <div id="api-section" style="display: none;">
                     <h2>🔑 API密钥管理</h2>
                     <div class="api-key-box">
-                        sk-your-api-key-here-12345
+                        <span id="apiKeyDisplay2">-</span>
                         <button class="copy-btn" onclick="copyApiKey()">复制</button>
                     </div>
-                    <button class="btn" style="margin-right: 15px;" onclick="generateNewKey()">🔑 生成新密钥</button>
-                    <button class="btn btn-danger" onclick="revokeKey()">❌ 撤销密钥</button>
-                    
                     <h3 style="margin-top: 30px; margin-bottom: 15px;">密钥使用说明</h3>
                     <ul style="color: #666; line-height: 2; padding-left: 20px;">
                         <li>将此密钥添加到请求头中: <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 4px;">Authorization: Bearer &lt;your-key&gt;</code></li>
                         <li>每个账号最多拥有3个活跃密钥</li>
-                        <li>请妥善保管您的密钥，泄露后请立即撤销</li>
+                        <li>请妥善保管您的密钥，泄露后请立即联系客服</li>
                     </ul>
                 </div>
-                
+
                 <!-- 充值 -->
                 <div id="recharge-section" style="display: none;">
                     <h2>💳 充值中心</h2>
+                    <div class="card">
+                        <h4>当前余额</h4>
+                        <div class="value">¥ <span id="balanceDisplay2">0.00</span></div>
+                    </div>
                     <div class="pricing-grid">
                         <div class="pricing-card">
                             <h4>体验版</h4>
@@ -317,7 +347,7 @@
                         </p>
                     </div>
                 </div>
-                
+
                 <!-- 使用记录 -->
                 <div id="usage-section" style="display: none;">
                     <h2>📋 使用记录</h2>
@@ -331,27 +361,9 @@
                                 <th>状态</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="usageTableBody">
                             <tr>
-                                <td>2026-05-02 14:30:00</td>
-                                <td>OpenAI</td>
-                                <td>gpt-3.5-turbo</td>
-                                <td>0.01元</td>
-                                <td style="color: #10b981;">成功</td>
-                            </tr>
-                            <tr>
-                                <td>2026-05-02 14:25:00</td>
-                                <td>Anthropic</td>
-                                <td>claude-3-sonnet</td>
-                                <td>0.02元</td>
-                                <td style="color: #10b981;">成功</td>
-                            </tr>
-                            <tr>
-                                <td>2026-05-01 16:45:00</td>
-                                <td>OpenAI</td>
-                                <td>gpt-4</td>
-                                <td>0.05元</td>
-                                <td style="color: #10b981;">成功</td>
+                                <td colspan="5" style="text-align: center; color: #999;">暂无使用记录</td>
                             </tr>
                         </tbody>
                     </table>
@@ -361,65 +373,191 @@
     </div>
 
     <script>
-        // 侧边栏导航切换
-        document.querySelectorAll('.sidebar-menu a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
-                this.classList.add('active');
-                
-                const target = this.getAttribute('href').substring(1);
-                document.querySelectorAll('.panel > div').forEach(section => section.style.display = 'none');
-                document.getElementById(target + '-section').style.display = 'block';
-            });
-        });
-        
-        // 复制API密钥
-        function copyApiKey() {
-            const key = 'sk-your-api-key-here-12345';
-            navigator.clipboard.writeText(key).then(() => {
-                alert('✅ 已复制到剪贴板');
-            });
+        // API地址 - 部署到服务器后改成服务器地址
+        const API_BASE = 'http://49.232.79.54:8081';
+
+        let currentUser = null;
+
+        // 页面加载时检查登录状态
+        window.onload = function() {
+            checkLoginStatus();
+        };
+
+        // 显示消息
+        function showMessage(text, type = 'success') {
+            const box = document.getElementById('messageBox');
+            box.textContent = text;
+            box.className = 'message ' + type;
+            box.style.display = 'block';
+            setTimeout(() => box.style.display = 'none', 3000);
         }
-        
-        // 生成新密钥
-        function generateNewKey() {
-            if (confirm('确定要生成新密钥吗？旧密钥将立即失效。')) {
-                alert('✅ 新密钥已生成！\n\n新密钥: sk-new-key-generated-abcde');
+
+        // 切换显示区块
+        function showSection(name) {
+            document.querySelectorAll('.panel > div').forEach(section => section.style.display = 'none');
+            document.getElementById(name + '-section').style.display = 'block';
+
+            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+            document.querySelector(`.sidebar-menu a[href="#${name}"]`).classList.add('active');
+
+            if (currentUser && name === 'recharge') {
+                document.getElementById('balanceDisplay2').textContent = currentUser.balance.toFixed(2);
             }
         }
-        
-        // 撤销密钥
-        function revokeKey() {
-            if (confirm('确定要撤销当前密钥吗？此操作不可恢复。')) {
-                alert('✅ 密钥已撤销');
+
+        // 检查登录状态
+        function checkLoginStatus() {
+            const saved = localStorage.getItem('user');
+            if (saved) {
+                currentUser = JSON.parse(saved);
+                updateUserUI();
             }
         }
-        
+
+        // 更新用户界面
+        function updateUserUI() {
+            if (currentUser) {
+                document.getElementById('loggedOutView').style.display = 'none';
+                document.getElementById('loggedInView').style.display = 'block';
+                document.getElementById('usernameDisplay').textContent = currentUser.username;
+                document.getElementById('emailDisplay').textContent = currentUser.email;
+                document.getElementById('balanceDisplay').textContent = currentUser.balance.toFixed(2);
+                document.getElementById('apiKeyDisplay').textContent = currentUser.api_key;
+                document.getElementById('apiKeyDisplay2').textContent = currentUser.api_key;
+            } else {
+                document.getElementById('loggedOutView').style.display = 'block';
+                document.getElementById('loggedInView').style.display = 'none';
+            }
+        }
+
         // 注册
-        function register() {
+        async function register() {
             const username = document.getElementById('reg-username').value;
             const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
             const password2 = document.getElementById('reg-password2').value;
-            
+
             if (!username || !email || !password) {
-                alert('请填写完整信息');
+                showMessage('请填写完整信息', 'error');
                 return;
             }
-            
+
             if (password !== password2) {
-                alert('两次输入的密码不一致');
+                showMessage('两次输入的密码不一致', 'error');
                 return;
             }
-            
-            alert('✅ 注册成功！\n\n用户名: ' + username + '\n邮箱: ' + email);
+
+            try {
+                const response = await fetch(`${API_BASE}/api/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentUser = data.user;
+                    localStorage.setItem('user', JSON.stringify(currentUser));
+                    showMessage('注册成功！');
+                    updateUserUI();
+                    showSection('dashboard');
+                } else {
+                    showMessage(data.error || '注册失败', 'error');
+                }
+            } catch (e) {
+                showMessage('连接服务器失败，请确保服务器已启动', 'error');
+            }
         }
-        
+
+        // 登录
+        async function login() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!username || !password) {
+                showMessage('请填写完整信息', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentUser = data.user;
+                    localStorage.setItem('user', JSON.stringify(currentUser));
+                    showMessage('登录成功！');
+                    updateUserUI();
+                    showSection('dashboard');
+                } else {
+                    showMessage(data.error || '登录失败', 'error');
+                }
+            } catch (e) {
+                showMessage('连接服务器失败，请确保服务器已启动', 'error');
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('user');
+            showMessage('已退出登录');
+            updateUserUI();
+            showSection('dashboard');
+        }
+
+        // 复制API密钥
+        function copyApiKey() {
+            if (currentUser) {
+                navigator.clipboard.writeText(currentUser.api_key).then(() => {
+                    showMessage('已复制到剪贴板');
+                });
+            }
+        }
+
         // 充值
-        function recharge(amount) {
-            alert('正在跳转到支付页面...\n\n充值金额: ¥' + amount);
+        async function recharge(amount) {
+            if (!currentUser) {
+                showMessage('请先登录', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/recharge`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: currentUser.id, amount })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentUser.balance = data.new_balance;
+                    localStorage.setItem('user', JSON.stringify(currentUser));
+                    showMessage(`充值成功！充值金额：¥${amount}`);
+                    updateUserUI();
+                } else {
+                    showMessage(data.error || '充值失败', 'error');
+                }
+            } catch (e) {
+                showMessage('连接服务器失败，请确保服务器已启动', 'error');
+            }
         }
+
+        // 侧边栏导航
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('href').substring(1);
+                showSection(target);
+            });
+        });
     </script>
 </body>
 </html>
