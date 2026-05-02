@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wusuoweiaisuisui.github.io/sitemap.xml
