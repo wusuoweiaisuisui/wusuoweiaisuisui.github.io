@@ -100,14 +100,33 @@
             font-weight: bold;
         }
         .nav-link:hover { background: #5568d3; }
+        .error-note {
+            background: #f8d7da;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #721c24;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
+    <nav class="nav" style="background:rgba(255,255,255,0.95);padding:15px 30px;box-shadow:0 2px 10px rgba(0,0,0,0.1);margin-bottom:20px;">
+        <div style="max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:24px;font-weight:bold;color:#667eea;">🦐 虾仔科技</div>
+            <div style="display:flex;gap:25px;">
+                <a href="index.html" style="color:#333;text-decoration:none;font-weight:500;">首页</a>
+                <a href="strategy-monitor.html" style="color:#667eea;text-decoration:none;font-weight:500;">策略监控</a>
+                <a href="blog/" style="color:#333;text-decoration:none;font-weight:500;">博客</a>
+                <a href="token-relay.html" style="color:#333;text-decoration:none;font-weight:500;">Token中转</a>
+                <a href="overseas-shipping.html" style="color:#333;text-decoration:none;font-weight:500;">海外一件代发</a>
+            </div>
+        </div>
+    </nav>
     <div class="container">
         <div class="header">
-            <a href="index.html" class="nav-link">← Back to Home</a>
             <h1>Trading Strategy Monitor</h1>
-            <p id="connection-status">Initializing...</p>
+            <p id="connection-status">Connecting to server...</p>
             <div class="status-bar">
                 <div class="status-card">
                     <h3>Account Balance</h3>
@@ -131,12 +150,13 @@
         <div class="panel">
             <div class="api-config">
                 <label>API Server URL:</label>
-                <input type="text" id="api-url" placeholder="http://YOUR_SERVER_IP:8000/api">
+                <input type="text" id="api-url" value="http://49.232.79.54:8000/api" placeholder="http://YOUR_SERVER_IP:8000/api">
                 <button onclick="saveApiUrl()">Save & Connect</button>
-                <p style="font-size: 12px; color: #666; margin-top: 8px;">
-                    Default: http://localhost:8000/api (for local testing)<br>
-                    For remote access: Use your server's public IP
-                </p>
+                <div class="error-note">
+                    ⚠️ <strong>注意：</strong>GitHub Pages是HTTPS网站，浏览器会阻止访问HTTP的API。
+                    <br>请点击浏览器地址栏的小锁或盾牌图标，允许不安全内容。
+                    <br>或者直接访问 <a href="http://49.232.79.54:5000" target="_blank" style="color:#007bff;">http://49.232.79.54:5000</a> 查看策略网页。
+                </div>
             </div>
         </div>
 
@@ -155,7 +175,7 @@
                             </tr>
                         </thead>
                         <tbody id="data-table">
-                            <tr><td colspan="5" class="loading">Enter API URL above and click Save</td></tr>
+                            <tr><td colspan="5" class="loading">Loading...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -196,21 +216,25 @@
         }
 
         function getApiUrl() {
-            return localStorage.getItem(API_BASE_STORAGE) || 'http://localhost:8000/api';
+            const saved = localStorage.getItem(API_BASE_STORAGE);
+            return saved || 'http://49.232.79.54:8000/api';
         }
 
         async function refreshData() {
             const apiBase = getApiUrl();
             try {
-                const statusRes = await fetch(`${apiBase}/status`);
+                document.getElementById('connection-status').textContent = 'Connecting...';
+
+                const statusRes = await fetch(apiBase + '/status');
                 const statusData = await statusRes.json();
 
                 if (statusData.success) {
                     updateStatusDisplay(statusData.data);
                     document.getElementById('connection-status').textContent = statusData.data.status || 'Connected';
+                    document.getElementById('connection-status').style.color = '#28a745';
                 }
 
-                const posRes = await fetch(`${apiBase}/positions`);
+                const posRes = await fetch(apiBase + '/positions');
                 const posData = await posRes.json();
 
                 if (posData.success) {
@@ -218,7 +242,7 @@
                     document.getElementById('total-pos').textContent = posData.total_pos;
                 }
 
-                const portfolioRes = await fetch(`${apiBase}/portfolio`);
+                const portfolioRes = await fetch(apiBase + '/portfolio');
                 const portfolioData = await portfolioRes.json();
 
                 if (portfolioData.success) {
@@ -226,7 +250,7 @@
                 }
             } catch (error) {
                 console.error('Refresh failed:', error);
-                document.getElementById('connection-status').textContent = 'Connection failed - check API URL';
+                document.getElementById('connection-status').textContent = 'Connection failed - click allow insecure content';
                 document.getElementById('connection-status').style.color = '#dc3545';
             }
         }
