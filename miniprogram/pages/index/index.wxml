@@ -1,0 +1,81 @@
+
+&lt;view class="container"&gt;
+  &lt;view class="header"&gt;
+    &lt;view class="header-title"&gt;📊 策略监控&lt;/view&gt;
+    &lt;view class="status-text"&gt;{{status}}&lt;/view&gt;
+    
+    &lt;view class="status-grid"&gt;
+      &lt;view class="status-card"&gt;
+        &lt;view class="card-label"&gt;账户余额&lt;/view&gt;
+        &lt;view class="card-value"&gt;{{balance}}&lt;/view&gt;
+      &lt;/view&gt;
+      &lt;view class="status-card {{todayPnlClass}}"&gt;
+        &lt;view class="card-label"&gt;今日盈亏&lt;/view&gt;
+        &lt;view class="card-value"&gt;{{todayPnl}}&lt;/view&gt;
+      &lt;/view&gt;
+      &lt;view class="status-card positive"&gt;
+        &lt;view class="card-label"&gt;平仓盈亏&lt;/view&gt;
+        &lt;view class="card-value"&gt;{{closedPnl}}&lt;/view&gt;
+      &lt;/view&gt;
+      &lt;view class="status-card"&gt;
+        &lt;view class="card-label"&gt;持仓数&lt;/view&gt;
+        &lt;view class="card-value"&gt;{{totalPos}}&lt;/view&gt;
+      &lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+
+  &lt;view class="panel"&gt;
+    &lt;view class="panel-header"&gt;
+      &lt;view class="panel-title"&gt;持仓与信号&lt;/view&gt;
+      &lt;view class="refresh-btn" bindtap="refreshData"&gt;🔄&lt;/view&gt;
+    &lt;/view&gt;
+    
+    &lt;view wx:if="{{loading}}" class="loading"&gt;加载中...&lt;/view&gt;
+    &lt;view wx:else&gt;
+      &lt;view wx:if="{{positions.length === 0}}" class="empty"&gt;暂无持仓&lt;/view&gt;
+      &lt;view wx:else class="position-list"&gt;
+        &lt;view class="position-item" wx:for="{{positions}}" wx:key="name"&gt;
+          &lt;view class="pos-name"&gt;{{item.name}}&lt;/view&gt;
+          &lt;view class="pos-price"&gt;{{item.price.toFixed(2)}}&lt;/view&gt;
+          &lt;view class="pos-position"&gt;{{item.position}}&lt;/view&gt;
+          &lt;view class="pos-pnl {{item.pnlClass}}"&gt;¥{{item.pnl.toLocaleString()}}&lt;/view&gt;
+          &lt;view class="signal {{item.signalClass}}"&gt;{{item.signal}}&lt;/view&gt;
+        &lt;/view&gt;
+      &lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+
+  &lt;view class="panel"&gt;
+    &lt;view class="panel-header"&gt;
+      &lt;view class="panel-title"&gt;策略配置&lt;/view&gt;
+    &lt;/view&gt;
+    
+    &lt;view class="portfolio-list"&gt;
+      &lt;view class="portfolio-item" wx:for="{{portfolio}}" wx:key="name"&gt;
+        &lt;view class="port-name"&gt;{{item.name}}&lt;/view&gt;
+        &lt;view class="port-info"&gt;
+          &lt;text&gt;短均线: {{item.ma_short}} | 长均线: {{item.ma_long}}&lt;/text&gt;
+          &lt;text&gt;止损: {{(item.stop_loss * 100).toFixed(1)}}% | 止盈: {{(item.take_profit * 100).toFixed(1)}}%&lt;/text&gt;
+          &lt;text&gt;共振阈值: {{item.resonance_threshold}}&lt;/text&gt;
+        &lt;/view&gt;
+      &lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+
+  &lt;view class="panel"&gt;
+    &lt;view class="panel-header"&gt;
+      &lt;view class="panel-title"&gt;交易历史&lt;/view&gt;
+    &lt;/view&gt;
+    
+    &lt;view wx:if="{{history.length === 0}}" class="empty"&gt;暂无交易记录&lt;/view&gt;
+    &lt;view wx:else class="history-list"&gt;
+      &lt;view class="history-item" wx:for="{{history}}" wx:key="id"&gt;
+        &lt;view class="hist-time"&gt;{{item.time}}&lt;/view&gt;
+        &lt;view class="hist-content"&gt;
+          {{item.name}} - {{item.action}} {{item.direction}} @{{item.price}}
+          &lt;text wx:if="{{item.pnl !== 0}}"&gt; | 盈亏: ¥{{item.pnl.toLocaleString()}}&lt;/text&gt;
+        &lt;/view&gt;
+      &lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/view&gt;
